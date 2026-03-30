@@ -1,0 +1,57 @@
+.mylist {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+}
+
+.mylist__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: var(--space-md);
+}
+
+.mylist-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  display: flex;
+  overflow: hidden;
+  transition: box-shadow var(--transition-fast);
+}
+
+.mylist-card:hover { box-shadow: var(--shadow-md); }
+
+.mylist-card__icon {
+  width: 80px;
+  background: var(--color-surface-hover);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36px;
+  flex-shrink: 0;
+}
+
+.mylist-card__body {
+  flex: 1;
+  padding: var(--space-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.mylist-card__name {
+  font-weight: 600;
+  font-size: var(--font-size-base);
+}
+
+.mylist-card__price {
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+  color: var(--color-secondary);
+}
+
+.mylist-card__actions {
+  display: flex;
+  gap: var(--space-sm);
+  margin-top: var(--space-sm);
+}
