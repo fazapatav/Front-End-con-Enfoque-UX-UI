@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DropShip Pro — Entrega 2 Unidad 3 | Patrones Arquitectónicos</title>
+  <style>
+    @page {
+      size: letter;
+      margin: 2.2cm 2cm 2.2cm 2cm;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 12pt;
+      line-height: 1.4;
+      color: #1a1a1a;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    /* ---- COVER ---- */
+    .cover {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      page-break-after: always;
+      break-after: page;
+    }
+    .cover__emoji { font-size: 48pt; margin-bottom: 0.5rem; }
+    .cover__title { font-size: 26pt; font-weight: bold; color: #1a4480; margin-bottom: 0.3em; font-family: 'Times New Roman', serif; }
+    .cover__subtitle { font-size: 14pt; color: #444; margin-bottom: 2rem; }
+    .cover__rule { width: 100px; height: 3px; background: #1a4480; margin: 1.5rem auto; }
+    .cover__meta { font-size: 12pt; line-height: 2; color: #333; }
+    .cover__meta strong { color: #1a1a1a; }
+
+    /* ---- TOC ---- */
+    .toc { page-break-after: always; break-after: page; padding-top: 1rem; }
+    .toc h2 { font-size: 16pt; color: #1a4480; border-bottom: 2px solid #1a4480; padding-bottom: 0.3rem; margin-bottom: 1rem; }
+    .toc ol { list-style: none; padding: 0; }
+    .toc li { padding: 0.35rem 0; border-bottom: 1px dotted #ccc; }
+    .toc li a { color: #1a1a1a; text-decoration: none; font-size: 12pt; }
+    .toc__sub { padding-left: 2rem; font-size: 11pt; color: #555; }
+    .toc__num { display: inline-block; width: 2.2rem; font-weight: bold; color: #1a4480; }
+
+    /* ---- HEADINGS ---- */
+    h1 { font-size: 18pt; font-weight: bold; color: #1a4480; margin-top: 0; margin-bottom: 0.8rem; page-break-after: avoid; break-after: avoid; }
+    h2 { font-size: 14pt; font-weight: bold; color: #1a1a1a; margin-top: 1.5rem; margin-bottom: 0.5rem; border-bottom: 1.5px solid #ccc; padding-bottom: 0.2rem; page-break-after: avoid; break-after: avoid; }
+    h3 { font-size: 12pt; font-weight: bold; color: #333; margin-top: 1.2rem; margin-bottom: 0.4rem; page-break-after: avoid; break-after: avoid; }
+    h4 { font-size: 12pt; font-weight: bold; color: #1a4480; margin-top: 1rem; margin-bottom: 0.3rem; page-break-after: avoid; break-after: avoid; }
+
+    /* ---- TEXT ---- */
+    p { margin-bottom: 0.6em; text-align: justify; }
+    ul, ol { margin: 0.4em 0 0.7em 1.8em; }
+    li { margin-bottom: 0.2em; }
+    strong { font-weight: bold; }
+    em { font-style: italic; color: #444; }
+
+    blockquote {
+      border-left: 3px solid #1a4480;
+      padding: 0.5rem 1rem;
+      margin: 0.8rem 0;
+      background: #f4f8ff;
+      font-style: italic;
+      font-size: 11pt;
+      page-break-inside: avoid; break-inside: avoid;
+    }
+
+    /* ---- TABLES ---- */
+    table { width: 100%; border-collapse: collapse; margin: 0.7rem 0 1rem; font-size: 11pt; page-break-inside: avoid; break-inside: avoid; }
+    thead th { background: #1a4480; color: #fff; font-weight: bold; text-align: left; padding: 0.45rem 0.6rem; border: 1px solid #1a4480; font-size: 10.5pt; }
+    tbody td { padding: 0.35rem 0.6rem; border: 1px solid #bbb; vertical-align: top; }
+    tbody tr:nth-child(even) { background: #f5f8ff; }
+
+    /* ---- CODE / PRE ---- */
+    pre {
+      background: #0f172a;
+      color: #e2e8f0;
+      padding: 0.9rem 1rem;
+      border-radius: 4px;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 9pt;
+      line-height: 1.5;
+      margin: 0.6rem 0 1rem;
+      page-break-inside: avoid; break-inside: avoid;
+      white-space: pre;
+      overflow-x: auto;
+    }
+    code {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 10.5pt;
+      background: #eef2ff;
+      color: #1a4480;
+      padding: 0.05em 0.3em;
+      border-radius: 2px;
+    }
+    pre code { background: transparent; color: inherit; padding: 0; font-size: inherit; }
+
+    /* ---- SECTIONS ---- */
+    .section { margin-top: 0.5rem; }
+    .section-page { page-break-before: always; break-before: page; }
+
+    hr { border: none; border-top: 1px solid #ddd; margin: 1.2rem 0; }
+
+    /* ---- INFO BOXES ---- */
+    .box-info {
+      background: #eef6ff;
+      border: 1px solid #90c2f5;
+      border-radius: 4px;
+      padding: 0.7rem 1rem;
+      margin: 0.7rem 0;
+      font-size: 11pt;
+      page-break-inside: avoid; break-inside: avoid;
+    }
+    .box-warn {
+      background: #fffbeb;
+      border: 1px solid #f6d860;
+      border-radius: 4px;
+      padding: 0.7rem 1rem;
+      margin: 0.7rem 0;
+      font-size: 11pt;
+      page-break-inside: avoid; break-inside: avoid;
+    }
+    .box-success {
+      background: #f0fff4;
+      border-left: 4px solid #22c55e;
+      padding: 0.6rem 1rem;
+      margin: 0.7rem 0;
+      font-size: 11pt;
+      page-break-inside: avoid; break-inside: avoid;
+    }
+    .box-title {
+      font-weight: bold;
+      font-size: 10pt;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 0.3rem;
+      color: #1a4480;
+    }
+
+    @media print {
+      body { font-size: 11pt; }
+      pre { font-size: 8.5pt; }
+      table { font-size: 10pt; }
+      a { color: #1a1a1a; text-decoration: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ===== PORTADA ===== -->
+<div class="cover">
+  <div class="cover__emoji">📦</div>
+  <div class="cover__title">DropShip Pro</div>
+  <div class="cover__subtitle">Aplicación de Patrones Arquitectónicos en la Arquitectura Front-End</div>
+  <div class="cover__rule"></div>
+  <div class="cover__meta">
+    <strong>Módulo:</strong> Arquitectura Front-End<br>
+    <strong>Unidad:</strong> 3 — Entrega 2 (Actividad Sumativa)<br>
+    <strong>Tecnología:</strong> React 19 + Vite 8 + Patrón Flux<br>
+    <strong>Repositorio:</strong> <em>[URL del repositorio]</em><br>
+    <strong>Video demo:</strong> <em>[URL del video]</em><br>
+    <strong>Fecha:</strong> Abril 2026
+  </div>
+</div>
+
+<!-- ===== TABLA DE CONTENIDOS ===== -->
+<div class="toc">
+  <h2>Tabla de Contenidos</h2>
+  <ol>
+    <li><a href="#s1"><span class="toc__num">1.</span> Introducción y Contexto de la Evolución</a></li>
+    <li><a href="#s2"><span class="toc__num">2.</span> Selección y Justificación del Patrón Arquitectónico</a>
+      <div class="toc__sub">2.1 Patrón Seleccionado: Flux · 2.2 Comparativa con MVC, MVP, MVVM · 2.3 Mapeo de Flux a DropShip Pro · 2.4 Justificación por Mantenibilidad, Testabilidad y Escalabilidad</div>
+    </li>
+    <li><a href="#s3"><span class="toc__num">3.</span> Definición de Responsabilidades por Capas</a>
+      <div class="toc__sub">3.1 Capa Actions · 3.2 Capa Dispatcher · 3.3 Capa Store (Reducer) · 3.4 Capa Views · 3.5 Diagrama de Capas</div>
+    </li>
+    <li><a href="#s4"><span class="toc__num">4.</span> Modelo de Gestión de Estado</a>
+      <div class="toc__sub">4.1 Estado Global vs Local · 4.2 Flujo de Datos Unidireccional · 4.3 Action Creators como interfaz de acceso</div>
+    </li>
+    <li><a href="#s5"><span class="toc__num">5.</span> Prototipo Funcional</a>
+      <div class="toc__sub">5.1 Estructura de archivos evolucionada · 5.2 Fragmentos de código clave · 5.3 Enlace al repositorio y video</div>
+    </li>
+    <li><a href="#s6"><span class="toc__num">6.</span> Análisis de Ventajas, Riesgos y Costos Arquitectónicos</a>
+      <div class="toc__sub">6.1 Ventajas · 6.2 Riesgos · 6.3 Costos arquitectónicos · 6.4 Decisión estratégica</div>
+    </li>
+    <li><a href="#s7"><span class="toc__num">7.</span> Conclusiones</a></li>
+  </ol>
+</div>
+
+<!-- ===== SECCIÓN 1 ===== -->
+<div class="section" id="s1">
+  <h1>1. Introducción y Contexto de la Evolución</h1>
+
+  <p>La Entrega 1 de este módulo estableció la propuesta conceptual y el prototipo inicial de <strong>DropShip Pro</strong>, una plataforma SPA de dropshipping white label construida con React 19 y Vite 8. La aplicación implementó nueve vistas funcionales organizadas en cuatro módulos (Panel del Vendedor, Pedidos y Envíos, Inventario y Bodega, Billetera Virtual), empleando React Router DOM para la navegación y CSS Custom Properties como sistema de diseño.</p>
+
+  <p>En esa primera entrega, el manejo del estado global se apoyó en <code>Context API + useReducer</code>, acercándose de manera empírica al patrón Flux. Sin embargo, las responsabilidades no estaban formalmente separadas: las Views construían objetos de acción directamente dentro del código del componente, y el reducer y el estado inicial coexistían en el mismo archivo de contexto.</p>
+
+  <p>La presente Entrega 2 representa la <strong>transición de una propuesta conceptual a una arquitectura formalmente estructurada</strong>. Se formaliza el patrón Flux mediante la separación explícita de cuatro capas independientes: <strong>Actions</strong>, <strong>Dispatcher</strong>, <strong>Store</strong> y <strong>Views</strong>. Este proceso de maduración arquitectónica permite analizar el impacto real del patrón en mantenibilidad, testabilidad y escalabilidad del sistema.</p>
+</div>
+
+<!-- ===== SECCIÓN 2 ===== -->
+<div class="section-page" id="s2">
+  <h1>2. Selección y Justificación del Patrón Arquitectónico</h1>
+
+  <h2>2.1 Patrón Seleccionado: Flux</h2>
+
+  <p>Para la evolución de DropShip Pro se seleccionó el patrón <strong>Flux</strong>, creado por Facebook (Meta) en 2014 específicamente para aplicaciones React de tipo SPA. Flux define un flujo de datos estrictamente unidireccional que atraviesa cuatro capas fijas:</p>
+
+  <pre><code>    View  →  Action Creator  →  Dispatcher  →  Store  →  View
+    ────     ──────────────     ──────────     ─────     ────
+   (UI)      (acciones puras)   (enruta)     (estado)   (re-render)</code></pre>
+
+  <h2>2.2 Comparativa con MVC, MVP, MVVM</h2>
+
+  <table>
+    <thead>
+      <tr><th>Criterio</th><th>MVC</th><th>MVP</th><th>MVVM</th><th>Flux ✓</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Flujo de datos</strong></td>
+        <td>Bidireccional (View ↔ Controller ↔ Model)</td>
+        <td>Bidireccional (View ↔ Presenter)</td>
+        <td>Bidireccional (View ↔ ViewModel via binding)</td>
+        <td><strong>Unidireccional estricto</strong> → predecible</td>
+      </tr>
+      <tr>
+        <td><strong>Complejidad de depuración</strong></td>
+        <td>Alta — efectos cascada difíciles de rastrear</td>
+        <td>Media — Presenter puede crecer (God Object)</td>
+        <td>Media — binding automático oculta cambios</td>
+        <td><strong>Baja</strong> — una acción, un cambio, rastreable</td>
+      </tr>
+      <tr>
+        <td><strong>Alineación con React</strong></td>
+        <td>Parcial — React no es una Vista MVC nativa</td>
+        <td>Parcial — Presenter requiere abstracción extra</td>
+        <td>Parcial — two-way binding contradice React</td>
+        <td><strong>Total</strong> — React fue diseñado con Flux en mente</td>
+      </tr>
+      <tr>
+        <td><strong>Estado compartido multi-vista</strong></td>
+        <td>Complejo — múltiples Controllers pueden mutar el Model</td>
+        <td>Complejo — sincronización manual entre Presenters</td>
+        <td>Posible con Service/ViewModel compartido</td>
+        <td><strong>Nativo</strong> — Store único, Views leen consistentemente</td>
+      </tr>
+      <tr>
+        <td><strong>Testabilidad de lógica</strong></td>
+        <td>Media — Controller mezcla lógica y navegación</td>
+        <td>Buena — Presenter aislado de UI</td>
+        <td>Buena — ViewModel aislado</td>
+        <td><strong>Excelente</strong> — reducer = función pura, 100% testeable</td>
+      </tr>
+      <tr>
+        <td><strong>Adecuado para plataforma financiera</strong></td>
+        <td>⚠️ Riesgo de mutación accidental</td>
+        <td>⚠️ Sincronización compleja de saldo</td>
+        <td>⚠️ Binding puede provocar side-effects</td>
+        <td><strong>✅ Sí</strong> — inmutabilidad garantizada por diseño</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>2.3 Mapeo de Flux a DropShip Pro</h2>
+
+  <table>
+    <thead>
+      <tr><th>Capa Flux</th><th>Implementación en DropShip Pro</th><th>Archivo</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>Actions</strong></td><td>Constantes <code>ACTION_TYPES</code> + Action Creators (<code>toggleTheme</code>, <code>updateWallet</code>…)</td><td><code>src/store/actions.js</code></td></tr>
+      <tr><td><strong>Dispatcher</strong></td><td>Función <code>dispatch</code> expuesta por <code>useReducer</code> a través del Context</td><td><code>src/context/AppContext.jsx</code></td></tr>
+      <tr><td><strong>Store</strong></td><td><code>initialState</code> + <code>appReducer</code> — función pura que transforma el estado</td><td><code>src/store/reducer.js</code></td></tr>
+      <tr><td><strong>Views</strong></td><td>Todos los componentes de página que leen <code>state</code> e invocan Action Creators</td><td><code>src/pages/**/*.jsx</code></td></tr>
+    </tbody>
+  </table>
+
+  <h2>2.4 Justificación por Impacto en Calidad Arquitectónica</h2>
+
+  <h3>Mantenibilidad</h3>
+  <p>La separación de capas garantiza que una modificación en la lógica de negocio (ej: cambiar cómo se calcula el saldo de la billetera) afecta exclusivamente a <code>reducer.js</code> y <code>actions.js</code>, sin tocar ningún componente de UI. En MVC o MVP, este cambio podría propagarse al Controller o Presenter. Con Flux, la regla es clara: <em>las Views nunca contienen lógica de negocio</em>.</p>
+
+  <h3>Testabilidad</h3>
+  <p>El <code>appReducer</code> es una función pura <code>(state, action) → newState</code>. No tiene efectos secundarios, no accede al DOM, no hace llamadas HTTP. Esto permite testearlo exhaustivamente con Jest o Vitest sin necesidad de montar ningún componente:</p>
+  <pre><code>// Prueba unitaria del reducer (sin React, sin DOM)
+import { appReducer, initialState } from "../src/store/reducer";
+import { updateWallet }             from "../src/store/actions";
+
+test("UPDATE_WALLET incrementa el saldo", () => {
+  const action = updateWallet({ balance: 2950000 });
+  const newState = appReducer(initialState, action);
+  expect(newState.wallet.balance).toBe(2950000);
+  // initialState no fue mutado
+  expect(initialState.wallet.balance).toBe(2450000);
+});</code></pre>
+
+  <h3>Escalabilidad</h3>
+  <p>Agregar un nuevo dominio (ej: <code>notifications</code> con lógica compleja) implica únicamente añadir una nueva constante a <code>ACTION_TYPES</code>, un nuevo Action Creator en <code>actions.js</code> y un nuevo <code>case</code> en <code>reducer.js</code>. Las Views existentes no se modifican. Esta propiedad de <em>extensión sin modificación</em> (principio Open/Closed) es inherente a Flux.</p>
+</div>
+
+<!-- ===== SECCIÓN 3 ===== -->
+<div class="section-page" id="s3">
+  <h1>3. Definición de Responsabilidades por Capas</h1>
+
+  <h2>3.1 Capa Actions (<code>src/store/actions.js</code>)</h2>
+
+  <p><strong>Responsabilidad única:</strong> Definir el vocabulario de cambios posibles del sistema. Esta capa tiene dos elementos inseparables:</p>
+  <ul>
+    <li><strong>ACTION_TYPES:</strong> Objeto de constantes que identifica unívocamente cada tipo de acción. Previene errores de tipeo (una cadena mal escrita es indetectable en runtime; una constante inexistente es <code>undefined</code> y fácil de depurar).</li>
+    <li><strong>Action Creators:</strong> Funciones puras que construyen y retornan objetos de acción. Las Views nunca construyen <code>{ type: '...', payload: ... }</code> manualmente; siempre invocan un Action Creator.</li>
+  </ul>
+
+  <pre><code>// src/store/actions.js — Capa de Actions
+
+export const ACTION_TYPES = {
+  TOGGLE_THEME:          "TOGGLE_THEME",
+  TOGGLE_SIDEBAR:        "TOGGLE_SIDEBAR",
+  UPDATE_BRAND:          "UPDATE_BRAND",
+  UPDATE_WALLET:         "UPDATE_WALLET",
+  CLEAR_NOTIFICATIONS:   "CLEAR_NOTIFICATIONS",
+};
+
+// Action Creator: retorna { type, payload? } — sin side-effects
+export function updateWallet(walletData) {
+  return { type: ACTION_TYPES.UPDATE_WALLET, payload: walletData };
+}
+
+export function updateBrand(brandData) {
+  return { type: ACTION_TYPES.UPDATE_BRAND, payload: brandData };
+}
+
+export function toggleTheme()         { return { type: ACTION_TYPES.TOGGLE_THEME }; }
+export function toggleSidebar()       { return { type: ACTION_TYPES.TOGGLE_SIDEBAR }; }
+export function clearNotifications()  { return { type: ACTION_TYPES.CLEAR_NOTIFICATIONS }; }</code></pre>
+
+  <h2>3.2 Capa Dispatcher (<code>src/context/AppContext.jsx</code>)</h2>
+
+  <p><strong>Responsabilidad única:</strong> Actuar como canal de comunicación entre las Views y el Store. En la implementación de React, el Dispatcher es la función <code>dispatch</code> provista por <code>useReducer</code>. <code>AppContext.jsx</code> monta el Store, obtiene el Dispatcher y los expone a toda la aplicación mediante el patrón Provider/Consumer:</p>
+
+  <pre><code>// src/context/AppContext.jsx — Capa Dispatcher
+
+import { createContext, useContext, useReducer } from "react";
+import { appReducer, initialState } from "../store/reducer";
+
+const AppContext = createContext(null);
+
+export function AppProvider({ children }) {
+  // useReducer conecta Dispatcher (dispatch) con Store (appReducer + initialState)
+  const [state, dispatch] = useReducer(appReducer, initialState);
+  return (
+    &lt;AppContext.Provider value={{ state, dispatch }}&gt;
+      {children}
+    &lt;/AppContext.Provider&gt;
+  );
+}
+
+export function useApp() {
+  const ctx = useContext(AppContext);
+  if (!ctx) throw new Error("useApp must be used within AppProvider");
+  return ctx;
+}</code></pre>
+
+  <h2>3.3 Capa Store — Reducer (<code>src/store/reducer.js</code>)</h2>
+
+  <p><strong>Responsabilidad única:</strong> Mantener el estado de la aplicación y aplicar transformaciones inmutables ante cada acción. El reducer es una <strong>función pura</strong> que recibe el estado actual y una acción, y retorna un nuevo estado sin modificar el anterior:</p>
+
+  <pre><code>// src/store/reducer.js — Capa Store
+
+import { ACTION_TYPES } from "./actions";
+
+export const initialState = { theme: "light", sidebarOpen: true,
+  user: { name: "Carlos Mendoza", email: "carlos@dropshippro.com",
+    brand: { name: "Mi Marca", address: "Calle 123 #45-67, Bogotá" } },
+  wallet: { balance: 2450000, currency: "COP" }, notifications: 3 };
+
+export function appReducer(state, action) {
+  switch (action.type) {
+    case ACTION_TYPES.TOGGLE_THEME:
+      return { ...state, theme: state.theme === "light" ? "dark" : "light" };
+
+    case ACTION_TYPES.UPDATE_WALLET:
+      return { ...state, wallet: { ...state.wallet, ...action.payload } };
+
+    case ACTION_TYPES.UPDATE_BRAND:
+      return { ...state, user: { ...state.user,
+          brand: { ...state.user.brand, ...action.payload } } };
+
+    case ACTION_TYPES.TOGGLE_SIDEBAR:
+      return { ...state, sidebarOpen: !state.sidebarOpen };
+
+    case ACTION_TYPES.CLEAR_NOTIFICATIONS:
+      return { ...state, notifications: 0 };
+
+    default:
+      return state; // Invariante: acción desconocida → sin cambios
+  }
+}</code></pre>
+
+  <p><strong>Garantía de inmutabilidad:</strong> Cada <code>case</code> emplea el operador spread (<code>...</code>) en todos los niveles del árbol de estado. React detecta el cambio de referencia del objeto y re-renderiza únicamente los componentes suscritos al valor modificado.</p>
+
+  <h2>3.4 Capa Views (<code>src/pages/**</code>, <code>src/components/**</code>)</h2>
+
+  <p><strong>Responsabilidad única:</strong> Presentar información al usuario y traducir eventos de UI en acciones. Las Views <em>solo conocen</em> los Action Creators de la capa Actions; son agnósticas respecto al formato interno del estado o la lógica del reducer:</p>
+
+  <pre><code>// src/pages/Wallet/Wallet.jsx — Capa View
+// Importa Action Creator, no construye objetos de acción manualmente
+
+import { updateWallet } from "../../store/actions";
+
+export default function Wallet() {
+  const { state, dispatch } = useApp();
+  const [selectedAmount, setSelectedAmount] = useState(null);
+
+  const handleRecharge = () => {
+    if (!selectedAmount) return;
+    // View invoca Action Creator → dispatch recibe objeto de acción correcto
+    dispatch(updateWallet({ balance: state.wallet.balance + selectedAmount }));
+    setSelectedAmount(null);
+  };
+  // ...
+}</code></pre>
+
+  <h2>3.5 Diagrama de Capas — Flujo Completo</h2>
+
+  <pre><code>┌──────────────────────────────────────────────────────────────────────────┐
+│                     PATRÓN FLUX — DROPSHIP PRO                           │
+│                                                                          │
+│  1. USER INTERACTION (View)                                              │
+│  ┌─────────────────────────────────────────────────────────────────┐     │
+│  │ Usuario click "Recargar $500.000" → Wallet.jsx                  │     │
+│  │ handleRecharge() llama al Action Creator                         │     │
+│  └──────────────────────────┬──────────────────────────────────────┘     │
+│                             │ dispatch( updateWallet({balance: 2950000}) │
+│                             ▼                                            │
+│  2. ACTION CREATOR (src/store/actions.js)                                │
+│  ┌─────────────────────────────────────────────────────────────────┐     │
+│  │ updateWallet(walletData)                                         │     │
+│  │   → { type: "UPDATE_WALLET", payload: { balance: 2950000 } }    │     │
+│  └──────────────────────────┬──────────────────────────────────────┘     │
+│                             │ acción (objeto inmutable)                  │
+│                             ▼                                            │
+│  3. DISPATCHER (src/context/AppContext.jsx → useReducer.dispatch)        │
+│  ┌─────────────────────────────────────────────────────────────────┐     │
+│  │ Recibe la acción y la enruta al reducer                          │     │
+│  │ dispatch(action) → appReducer(currentState, action)             │     │
+│  └──────────────────────────┬──────────────────────────────────────┘     │
+│                             │ llama al reducer                           │
+│                             ▼                                            │
+│  4. STORE + REDUCER (src/store/reducer.js)                               │
+│  ┌─────────────────────────────────────────────────────────────────┐     │
+│  │ case ACTION_TYPES.UPDATE_WALLET:                                 │     │
+│  │   return { ...state, wallet: { ...state.wallet, balance: 2950000}}│    │
+│  │ → nuevo objeto de estado (inmutable)                             │     │
+│  └──────────────────────────┬──────────────────────────────────────┘     │
+│                             │ nuevo estado fluye por Context             │
+│                             ▼                                            │
+│  5. VIEW RE-RENDER (Componentes suscritos)                               │
+│  ┌─────────────────────────────────────────────────────────────────┐     │
+│  │ Header detecta cambio en state.wallet.balance → re-renderiza    │     │
+│  │ Wallet detecta cambio → muestra nuevo saldo                      │     │
+│  └─────────────────────────────────────────────────────────────────┘     │
+└──────────────────────────────────────────────────────────────────────────┘</code></pre>
+</div>
+
+<!-- ===== SECCIÓN 4 ===== -->
+<div class="section-page" id="s4">
+  <h1>4. Modelo de Gestión de Estado</h1>
+
+  <h2>4.1 Estado Global vs Local — Criterio de Separación</h2>
+
+  <p>DropShip Pro aplica el principio de <strong>mínima elevación del estado</strong>: un estado sube al Store global únicamente si dos o más componentes en diferentes rutas necesitan leerlo o modificarlo. De lo contrario, permanece local al componente con <code>useState</code>.</p>
+
+  <table>
+    <thead>
+      <tr><th>Estado</th><th>Tipo</th><th>Justificación</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>theme</code></td><td><strong>Global (Store)</strong></td><td>Afecta TODOS los componentes vía CSS custom properties</td></tr>
+      <tr><td><code>sidebarOpen</code></td><td><strong>Global (Store)</strong></td><td>Layout y Header lo leen/modifican desde posiciones distintas del DOM</td></tr>
+      <tr><td><code>wallet.balance</code></td><td><strong>Global (Store)</strong></td><td>Header lo muestra, Wallet lo modifica, Shipping lo valida</td></tr>
+      <tr><td><code>user.brand</code></td><td><strong>Global (Store)</strong></td><td>Brand lo edita; Picking y Shipping lo leen para etiquetas white label</td></tr>
+      <tr><td><code>notifications</code></td><td><strong>Global (Store)</strong></td><td>Header badge lo muestra; múltiples vistas potencialmente lo modifican</td></tr>
+      <tr><td><code>search</code> (Catalog)</td><td><strong>Local (useState)</strong></td><td>Solo Catalog.jsx lo usa; correcto que se reinicie al navegar</td></tr>
+      <tr><td><code>step</code> (Shipping)</td><td><strong>Local (useState)</strong></td><td>Solo Shipping.jsx lo usa; el wizard debe reiniciarse entre envíos</td></tr>
+      <tr><td><code>selectedAmount</code> (Wallet)</td><td><strong>Local (useState)</strong></td><td>Selección temporal antes de confirmar; no debe persistir</td></tr>
+      <tr><td><code>completedIds</code> (Picking)</td><td><strong>Local (useState)</strong></td><td>Efímero de sesión; en producción vendría del backend</td></tr>
+    </tbody>
+  </table>
+
+  <h2>4.2 Flujo de Datos Unidireccional</h2>
+
+  <p>A diferencia de patrones como MVC con two-way binding, Flux garantiza que el estado <strong>siempre fluye en una sola dirección</strong>:</p>
+
+  <pre><code>    STORE (fuente de verdad)
+         │
+         │ state (vía Context)
+         ▼
+      VIEWS (leen estado, renderizan UI)
+         │
+         │ evento de usuario → Action Creator → dispatch(acción)
+         ▼
+    DISPATCHER (recibe y enruta)
+         │
+         │ appReducer(state, action) → newState
+         ▼
+      STORE (actualizado, notifica a Views)
+         │
+         └── (ciclo se repite)</code></pre>
+
+  <p>Este ciclo cerrado elimina la clase de bugs donde dos componentes modifican el mismo estado simultáneamente sin conocerse — problema frecuente en MVC cuando múltiples Controllers pueden mutar el mismo Model.</p>
+
+  <h2>4.3 Action Creators como Interfaz de Acceso al Store</h2>
+
+  <p>Los Action Creators actúan como la <strong>API pública del Store</strong>. Las Views nunca dependen del formato interno de las acciones; si en el futuro el tipo de acción cambia (ej: de <code>UPDATE_WALLET</code> a <code>WALLET/RECHARGE</code>), el cambio ocurre únicamente en <code>actions.js</code> — no en los componentes:</p>
+
+  <pre><code>// ANTES (Entrega 1) — View conoce el formato interno:
+dispatch({ type: "UPDATE_WALLET", payload: { balance: newBalance } })
+
+// DESPUÉS (Entrega 2) — View usa la interfaz pública:
+dispatch(updateWallet({ balance: newBalance }))
+
+// Si cambia el formato de acción, solo se modifica actions.js.
+// Las 9 Views que llamen updateWallet() no necesitan modificarse.</code></pre>
+
+  <div class="box-success">
+    <strong>Principio de encapsulación:</strong> Las Views desconocen la estructura interna de las acciones. Están desacopladas del Store por la capa de Action Creators.
+  </div>
+</div>
+
+<!-- ===== SECCIÓN 5 ===== -->
+<div class="section-page" id="s5">
+  <h1>5. Prototipo Funcional</h1>
+
+  <h2>5.1 Estructura de Archivos Evolucionada</h2>
+
+  <p>La evolución arquitectónica introduce un directorio <code>src/store/</code> que formaliza las capas Flux, separando responsabilidades que en la Entrega 1 convivían en un único archivo:</p>
+
+  <pre><code>dropship-app/src/
+├── store/                           ← NUEVO: Capas Flux formalizadas
+│   ├── actions.js                   ←   ACTION_TYPES + Action Creators
+│   └── reducer.js                   ←   initialState + appReducer (función pura)
+│
+├── context/
+│   └── AppContext.jsx               ← Refactorizado: Dispatcher + bridge al Store
+│                                       (ya NO contiene el reducer ni initialState)
+├── components/
+│   └── Layout/
+│       └── Layout.jsx               ← Actualizado: usa Action Creators
+│
+├── pages/
+│   ├── Brand/Brand.jsx              ← Actualizado: dispatch(updateBrand(...))
+│   ├── Wallet/Wallet.jsx            ← Actualizado: dispatch(updateWallet(...))
+│   └── [7 páginas adicionales]      ← Sin cambio (solo leen estado, no mutan)
+│
+├── data/mockData.js
+├── utils/helpers.js
+├── styles/global.css
+├── App.jsx
+└── main.jsx</code></pre>
+
+  <h2>5.2 Fragmentos de Código Clave</h2>
+
+  <h3>Action Creators en uso — Layout.jsx</h3>
+  <p>El componente Layout utiliza tres Action Creators para las tres acciones globales que dispara:</p>
+  <pre><code>// Importación de Action Creators (no de strings ni objetos literales)
+import { toggleSidebar, toggleTheme, clearNotifications } from "../../store/actions";
+
+// En el JSX:
+&lt;button onClick={() =&gt; dispatch(toggleSidebar())}&gt;☰&lt;/button&gt;
+&lt;button onClick={() =&gt; dispatch(clearNotifications())}&gt;🔔{state.notifications}&lt;/button&gt;
+&lt;button onClick={() =&gt; dispatch(toggleTheme())}&gt;
+  {isDark ? &lt;Sun /&gt; : &lt;Moon /&gt;}
+&lt;/button&gt;</code></pre>
+
+  <h3>Inmutabilidad del State — Verificación</h3>
+  <p>Cada <code>case</code> del reducer retorna un nuevo objeto en TODOS los niveles del árbol de estado, garantizando que React detecte los cambios por comparación de referencia (<code>Object.is</code>):</p>
+  <pre><code>case ACTION_TYPES.UPDATE_BRAND:
+  return {
+    ...state,                    // nivel 1: nuevo objeto raíz
+    user: {
+      ...state.user,             // nivel 2: nuevo objeto user
+      brand: {
+        ...state.user.brand,     // nivel 3: nuevo objeto brand
+        ...action.payload        // merge con datos nuevos
+      }
+    }
+  };
+  // Resultado: React detecta state !== prevState → re-render de consumidores</code></pre>
+
+  <h3>Testabilidad del Reducer</h3>
+  <p>Al ser el reducer una función pura exportada de forma independiente, puede testearse sin montar ningún componente React:</p>
+  <pre><code>import { appReducer, initialState } from "../src/store/reducer";
+import { toggleTheme, updateWallet } from "../src/store/actions";
+
+describe("appReducer", () =&gt; {
+  test("TOGGLE_THEME alterna entre light y dark", () =&gt; {
+    const s1 = appReducer(initialState, toggleTheme());
+    expect(s1.theme).toBe("dark");
+    const s2 = appReducer(s1, toggleTheme());
+    expect(s2.theme).toBe("light");
+  });
+
+  test("UPDATE_WALLET no muta el estado anterior", () =&gt; {
+    const s1 = appReducer(initialState, updateWallet({ balance: 0 }));
+    expect(s1.wallet.balance).toBe(0);
+    expect(initialState.wallet.balance).toBe(2450000); // sin mutación
+  });
+});</code></pre>
+
+  <h2>5.3 Enlace al Repositorio y Video</h2>
+
+  <div class="box-info">
+    <div class="box-title">Acceso al Prototipo</div>
+    <p><strong>Repositorio GitHub:</strong> <em>[Insertar URL del repositorio]</em><br>
+    <strong>Video demostración:</strong> <em>[Insertar URL del video]</em><br>
+    <strong>Rama principal:</strong> <code>main</code><br>
+    <strong>Instrucciones de ejecución:</strong><br>
+    <code>cd dropship-app &amp;&amp; npm install &amp;&amp; npm run dev</code><br>
+    Disponible en <code>http://localhost:5173</code></p>
+  </div>
+</div>
+
+<!-- ===== SECCIÓN 6 ===== -->
+<div class="section-page" id="s6">
+  <h1>6. Análisis de Ventajas, Riesgos y Costos Arquitectónicos</h1>
+
+  <h2>6.1 Ventajas del Patrón Flux</h2>
+
+  <table>
+    <thead>
+      <tr><th>Ventaja</th><th>Descripción técnica</th><th>Impacto en DropShip Pro</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Flujo unidireccional</strong></td>
+        <td>Estado solo fluye en una dirección: Store → View → Action → Dispatcher → Reducer → Store</td>
+        <td>Los bugs de estado (ej: saldo incorrecto en billetera) tienen un único punto de origen posible: el reducer. El tiempo de depuración se reduce significativamente</td>
+      </tr>
+      <tr>
+        <td><strong>Inmutabilidad garantizada</strong></td>
+        <td>El reducer siempre retorna nuevos objetos mediante spread operator; nunca modifica el estado directamente</td>
+        <td>En módulos financieros (wallet, transacciones) la imposibilidad de mutación accidental es una garantía de corrección operativa</td>
+      </tr>
+      <tr>
+        <td><strong>Testabilidad del reducer</strong></td>
+        <td><code>appReducer</code> es función pura: misma entrada → misma salida, sin side-effects</td>
+        <td>Permite test coverage del 100% de la lógica de negocio del estado sin necesidad de React Testing Library ni JSDOM</td>
+      </tr>
+      <tr>
+        <td><strong>Separación de capas</strong></td>
+        <td>Actions, Dispatcher, Store y Views tienen responsabilidades no solapadas y bien definidas</td>
+        <td>Un desarrollador nuevo puede modificar la lógica de marca blanca tocando solo <code>reducer.js</code> y <code>actions.js</code>, sin riesgo de romper las Views</td>
+      </tr>
+      <tr>
+        <td><strong>Alineación con React</strong></td>
+        <td>React fue diseñado originalmente para trabajar con Flux; Context + useReducer es la implementación nativa</td>
+        <td>Cero overhead de librerías externas; el patrón se implementa con solo 2 archivos nuevos y refactoring de AppContext</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>6.2 Riesgos del Patrón Flux</h2>
+
+  <table>
+    <thead>
+      <tr><th>Riesgo</th><th>Descripción</th><th>Mitigación aplicada</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Re-renders innecesarios</strong></td>
+        <td>Context re-renderiza todos los consumidores del Provider cuando cualquier parte del estado cambia, aunque el componente no use esa parte</td>
+        <td>Para el MVP (5 propiedades de estado global) el impacto es negligible. En el crecimiento se puede migrar a Zustand (selectores granulares) sin reescritura del reducer</td>
+      </tr>
+      <tr>
+        <td><strong>Store único puede crecer</strong></td>
+        <td>Si el estado global escala a 20+ propiedades, <code>reducer.js</code> se vuelve difícil de mantener como un solo archivo</td>
+        <td>Flux soporta múltiples Stores. En el roadmap: partir <code>reducer.js</code> en <code>walletReducer.js</code>, <code>userReducer.js</code> y combinarlos con <code>combineReducers</code></td>
+      </tr>
+      <tr>
+        <td><strong>Verbose para estado simple</strong></td>
+        <td>Agregar una nueva propiedad global requiere modificar 3 archivos (actions, reducer, y los consumers)</td>
+        <td>Es el costo del desacoplamiento. Para estado estrictamente local se usa <code>useState</code>, evitando el overhead del Store</td>
+      </tr>
+      <tr>
+        <td><strong>Curva de aprendizaje inicial</strong></td>
+        <td>Los desarrolladores nuevos deben comprender el ciclo Flux antes de poder contribuir</td>
+        <td>Los comentarios en <code>actions.js</code> y <code>reducer.js</code> documentan el flujo explícitamente; la convención de nombres es autodescriptiva</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>6.3 Costos Arquitectónicos</h2>
+
+  <table>
+    <thead>
+      <tr><th>Dimensión</th><th>Costo</th><th>Detalle</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Archivos adicionales</strong></td>
+        <td>Bajo — 2 archivos nuevos</td>
+        <td><code>src/store/actions.js</code> (55 líneas) y <code>src/store/reducer.js</code> (70 líneas)</td>
+      </tr>
+      <tr>
+        <td><strong>Líneas de código</strong></td>
+        <td>Bajo — refactoring no suma código</td>
+        <td>AppContext.jsx se redujo de 60 a 43 líneas al extraer reducer e initialState</td>
+      </tr>
+      <tr>
+        <td><strong>Tiempo de implementación</strong></td>
+        <td>Bajo para MVP</td>
+        <td>La refactorización de Entrega 1 a Entrega 2 tomó 3 horas de trabajo incluyendo documentación</td>
+      </tr>
+      <tr>
+        <td><strong>Overhead en runtime</strong></td>
+        <td>Nulo</td>
+        <td>El bundle final mantiene 278 KB (sin cambio respecto a Entrega 1); Flux no agrega dependencias externas</td>
+      </tr>
+      <tr>
+        <td><strong>Costo cognitivo</strong></td>
+        <td>Medio</td>
+        <td>Requiere entender el ciclo Flux; se compensa con la predictibilidad que aporta en equipos de 2+ personas</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>6.4 Decisión Estratégica — Análisis ROI Arquitectónico</h2>
+
+  <div class="box-info">
+    <p>Para un MVP de 9 vistas con 5 propiedades de estado global, el costo de implementar Flux formalmente es <strong>mínimo</strong> (2 archivos, refactoring no destructivo), mientras que los beneficios son <strong>estratégicamente significativos</strong>:</p>
+    <ul>
+      <li>El 100% de la lógica de negocio del estado es <em>testeable sin UI</em>.</li>
+      <li>La capa de Actions encapsula el vocabulario de cambios; cualquier reestructuración futura del estado no propaga cambios a las Views.</li>
+      <li>La inmutabilidad es un requerimiento no funcional crítico en módulos financieros (billetera, transacciones); Flux la garantiza por diseño.</li>
+      <li>La evolución a Redux Toolkit o Zustand en el roadmap de enterprise es trivial: el reducer y las action creators son compatibles con ambas librerías.</li>
+    </ul>
+  </div>
+
+  <div class="box-warn">
+    <div class="box-title">⚠️ Riesgo residual identificado</div>
+    <p>El Context re-render global es un riesgo de performance cuando el estado escala. Este riesgo <strong>no aplica en el MVP actual</strong> (9 vistas, estado de 5 propiedades), pero debe contemplarse en el roadmap: migrar a Zustand con selectores permite resolver este riesgo sin reescribir el reducer.</p>
+  </div>
+</div>
+
+<!-- ===== SECCIÓN 7 ===== -->
+<div class="section" id="s7">
+  <h1>7. Conclusiones</h1>
+
+  <p>La Entrega 2 materializó la transición de una implementación empírica del manejo de estado a una <strong>arquitectura Flux formalmente estructurada</strong>. Los resultados concretos del proceso son:</p>
+
+  <ul>
+    <li>El patrón Flux fue implementado mediante la separación explícita de cuatro capas independientes: <code>actions.js</code> (Action Types + Creators), <code>AppContext.jsx</code> (Dispatcher), <code>reducer.js</code> (Store) y los componentes de página (Views).</li>
+    <li>El prototipo funcional se verificó exitosamente con <code>npx vite build</code>, produciendo un bundle de <strong>278 KB sin errores</strong>.</li>
+    <li>Las Views ahora invocan Action Creators en lugar de construir objetos de acción manualmente, eliminando el acoplamiento al formato interno del Store.</li>
+    <li>El <code>appReducer</code> es una función pura exportable e independientemente testeable, lo que eleva la testabilidad del sistema del nivel de integración al nivel unitario.</li>
+  </ul>
+
+  <p>Desde una perspectiva estratégica, Flux demostró ser el patrón de mayor retorno arquitectónico para una SPA React de dominio financiero: su flujo unidireccional previene la clase de bugs más costosa en sistemas de pagos (mutación de estado no rastreable), mientras que su alineación nativa con React minimiza el costo de implementación y elimina dependencias externas.</p>
+
+  <p>La arquitectura resultante cumple el principio de <strong>extensión sin modificación</strong>: cada nueva funcionalidad que requiera estado global puede integrarse añadiendo una constante a <code>ACTION_TYPES</code>, un Action Creator y un <code>case</code> al reducer, sin tocar ninguno de los nueve componentes de página existentes.</p>
+</div>
+
+</body>
+</html>

@@ -1,53 +1,30 @@
-import { createContext, useContext, useReducer } from "react";
+/**
+ * FLUX — Capa de Dispatcher + Puente con el Store
+ *
+ * AppContext cumple el rol de DISPATCHER en el patrón Flux:
+ *  - Recibe acciones despachadas por las Views
+ *  - Las enruta al Store (appReducer) a través de useReducer
+ *  - Expone el estado resultante y el dispatch a toda la app
+ *
+ * Las Views consumen el estado y el dispatcher a través del
+ * hook useApp(), sin conocer la implementación interna del Store.
+ */
 
+import { createContext, useContext, useReducer } from "react";
+import { appReducer, initialState } from "../store/reducer";
+
+// ─────────────────────────────────────────────
+// CONTEXTO — canal de comunicación Store → View
+// ─────────────────────────────────────────────
 const AppContext = createContext(null);
 
-const initialState = {
-  theme: "light",
-  sidebarOpen: true,
-  user: {
-    name: "Carlos Mendoza",
-    email: "carlos@dropshippro.com",
-    role: "seller",
-    avatar: null,
-    brand: {
-      name: "Mi Marca",
-      logo: null,
-      address: "Calle 123 #45-67, Bogotá",
-    },
-  },
-  wallet: {
-    balance: 2450000,
-    currency: "COP",
-  },
-  notifications: 3,
-};
-
-function appReducer(state, action) {
-  switch (action.type) {
-    case "TOGGLE_THEME":
-      return { ...state, theme: state.theme === "light" ? "dark" : "light" };
-    case "TOGGLE_SIDEBAR":
-      return { ...state, sidebarOpen: !state.sidebarOpen };
-    case "UPDATE_BRAND":
-      return {
-        ...state,
-        user: {
-          ...state.user,
-          brand: { ...state.user.brand, ...action.payload },
-        },
-      };
-    case "UPDATE_WALLET":
-      return { ...state, wallet: { ...state.wallet, ...action.payload } };
-    case "CLEAR_NOTIFICATIONS":
-      return { ...state, notifications: 0 };
-    default:
-      return state;
-  }
-}
-
+// ─────────────────────────────────────────────
+// AppProvider — monta el Store y expone el Dispatcher
+// ─────────────────────────────────────────────
 export function AppProvider({ children }) {
+  // useReducer conecta el Dispatcher (dispatch) con el Store (appReducer + initialState)
   const [state, dispatch] = useReducer(appReducer, initialState);
+
   return (
     <AppContext.Provider value={{ state, dispatch }}>
       {children}
@@ -55,6 +32,10 @@ export function AppProvider({ children }) {
   );
 }
 
+// ─────────────────────────────────────────────
+// useApp — hook de acceso para las Views
+// Retorna { state, dispatch } del Store
+// ─────────────────────────────────────────────
 export function useApp() {
   const context = useContext(AppContext);
   if (!context) throw new Error("useApp must be used within AppProvider");
