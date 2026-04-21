@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Upload, Save, Eye } from "lucide-react";
 import { useApp } from "../../context/AppContext";
+import { updateBrand } from "../../store/actions";
 import "./Brand.css";
 
 export default function Brand() {
@@ -11,10 +12,7 @@ export default function Brand() {
 
   const handleSave = (e) => {
     e.preventDefault();
-    dispatch({
-      type: "UPDATE_BRAND",
-      payload: { name: brandName, address: brandAddress },
-    });
+    dispatch(updateBrand({ name: brandName, address: brandAddress }));
     setShowToast(true);
     setTimeout(() => setShowToast(false), 3000);
   };
