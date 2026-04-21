@@ -8,6 +8,7 @@ import {
 import { TRANSACTIONS } from "../../data/mockData";
 import { formatCurrency, formatDate } from "../../utils/helpers";
 import { useApp } from "../../context/AppContext";
+import { updateWallet } from "../../store/actions";
 import "./Wallet.css";
 
 const RECHARGE_OPTIONS = [100000, 200000, 500000, 1000000, 2000000, 5000000];
@@ -19,10 +20,7 @@ export default function Wallet() {
 
   const handleRecharge = () => {
     if (!selectedAmount) return;
-    dispatch({
-      type: "UPDATE_WALLET",
-      payload: { balance: state.wallet.balance + selectedAmount },
-    });
+    dispatch(updateWallet({ balance: state.wallet.balance + selectedAmount }));
     setSelectedAmount(null);
     setShowToast(true);
     setTimeout(() => setShowToast(false), 3000);

@@ -15,6 +15,11 @@ import {
   Settings,
 } from "lucide-react";
 import { useApp } from "../../context/AppContext";
+import {
+  toggleSidebar,
+  toggleTheme,
+  clearNotifications,
+} from "../../store/actions";
 import { formatCurrency } from "../../utils/helpers";
 import "./Layout.css";
 
@@ -123,7 +128,7 @@ export default function Layout() {
           <div className="header__left">
             <button
               className="header__toggle"
-              onClick={() => dispatch({ type: "TOGGLE_SIDEBAR" })}
+              onClick={() => dispatch(toggleSidebar())}
               aria-label="Toggle sidebar"
             >
               <Menu size={22} />
@@ -137,7 +142,7 @@ export default function Layout() {
             </div>
             <button
               className="header__icon-btn"
-              onClick={() => dispatch({ type: "CLEAR_NOTIFICATIONS" })}
+              onClick={() => dispatch(clearNotifications())}
               aria-label="Notificaciones"
             >
               <Bell size={20} />
@@ -147,7 +152,7 @@ export default function Layout() {
             </button>
             <button
               className="header__icon-btn"
-              onClick={() => dispatch({ type: "TOGGLE_THEME" })}
+              onClick={() => dispatch(toggleTheme())}
               aria-label="Cambiar tema"
             >
               {isDark ? <Sun size={20} /> : <Moon size={20} />}
