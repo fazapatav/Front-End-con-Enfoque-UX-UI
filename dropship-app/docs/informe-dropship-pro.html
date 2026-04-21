@@ -1,0 +1,1370 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DropShip Pro — Informe Técnico</title>
+  <style>
+    /* ============================================================
+       PRINT-READY STYLES — Optimizado para exportar como PDF
+       ============================================================ */
+
+    @page {
+      size: letter;
+      margin: 2.2cm 2cm 2.2cm 2cm;
+      @bottom-center {
+        content: counter(page);
+        font-family: 'Inter', system-ui, sans-serif;
+        font-size: 9pt;
+        color: #94a3b8;
+      }
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+      font-size: 11pt;
+      line-height: 1.65;
+      color: #1e293b;
+      counter-reset: page;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    /* ---- COVER PAGE ---- */
+    .cover {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      text-align: center;
+      page-break-after: always;
+      break-after: page;
+      padding: 3rem 2rem;
+    }
+
+    .cover__logo {
+      font-size: 54pt;
+      margin-bottom: 0.5rem;
+    }
+
+    .cover__title {
+      font-size: 28pt;
+      font-weight: 800;
+      color: #6366f1;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.15em;
+    }
+
+    .cover__subtitle {
+      font-size: 14pt;
+      font-weight: 400;
+      color: #64748b;
+      margin-bottom: 2.5rem;
+    }
+
+    .cover__meta {
+      font-size: 11pt;
+      color: #475569;
+      line-height: 2;
+      margin-top: 1rem;
+    }
+
+    .cover__meta strong {
+      color: #1e293b;
+    }
+
+    .cover__line {
+      width: 80px;
+      height: 4px;
+      background: linear-gradient(90deg, #6366f1, #8b5cf6);
+      border-radius: 2px;
+      margin: 2rem auto;
+    }
+
+    /* ---- TABLE OF CONTENTS ---- */
+    .toc {
+      page-break-after: always;
+      break-after: page;
+      padding-top: 2rem;
+    }
+
+    .toc h2 {
+      font-size: 18pt;
+      font-weight: 700;
+      color: #6366f1;
+      margin-bottom: 1.5rem;
+      border-bottom: 2px solid #e2e8f0;
+      padding-bottom: 0.5rem;
+    }
+
+    .toc ol {
+      list-style: none;
+      padding: 0;
+    }
+
+    .toc ol li {
+      padding: 0.4rem 0;
+      border-bottom: 1px dotted #e2e8f0;
+      font-size: 11pt;
+    }
+
+    .toc ol li a {
+      color: #1e293b;
+      text-decoration: none;
+    }
+
+    .toc ol li a:hover {
+      color: #6366f1;
+    }
+
+    .toc .toc__sub {
+      padding-left: 1.5rem;
+      font-size: 10pt;
+      color: #475569;
+    }
+
+    .toc__number {
+      display: inline-block;
+      width: 2.5rem;
+      font-weight: 600;
+      color: #6366f1;
+    }
+
+    /* ---- HEADINGS ---- */
+    h1 {
+      font-size: 22pt;
+      font-weight: 800;
+      color: #6366f1;
+      margin-top: 0;
+      margin-bottom: 1rem;
+      letter-spacing: -0.01em;
+      page-break-after: avoid;
+      break-after: avoid;
+    }
+
+    h2 {
+      font-size: 16pt;
+      font-weight: 700;
+      color: #1e293b;
+      margin-top: 2rem;
+      margin-bottom: 0.8rem;
+      padding-bottom: 0.3rem;
+      border-bottom: 2px solid #e2e8f0;
+      page-break-after: avoid;
+      break-after: avoid;
+    }
+
+    h3 {
+      font-size: 13pt;
+      font-weight: 600;
+      color: #334155;
+      margin-top: 1.5rem;
+      margin-bottom: 0.5rem;
+      page-break-after: avoid;
+      break-after: avoid;
+    }
+
+    h4 {
+      font-size: 11pt;
+      font-weight: 600;
+      color: #475569;
+      margin-top: 1.2rem;
+      margin-bottom: 0.4rem;
+      page-break-after: avoid;
+      break-after: avoid;
+    }
+
+    /* ---- PARAGRAPHS & LISTS ---- */
+    p {
+      margin-bottom: 0.7em;
+      text-align: justify;
+    }
+
+    ul, ol {
+      margin: 0.5em 0 0.8em 1.5em;
+    }
+
+    li {
+      margin-bottom: 0.25em;
+    }
+
+    strong {
+      font-weight: 600;
+      color: #0f172a;
+    }
+
+    em {
+      color: #475569;
+    }
+
+    blockquote {
+      border-left: 4px solid #6366f1;
+      padding: 0.6rem 1rem;
+      margin: 1rem 0;
+      background: #f8fafc;
+      color: #475569;
+      font-style: italic;
+      font-size: 10pt;
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+
+    /* ---- TABLES ---- */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 0.8rem 0 1.2rem;
+      font-size: 9.5pt;
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+
+    thead th {
+      background: #f1f5f9;
+      color: #334155;
+      font-weight: 600;
+      text-align: left;
+      padding: 0.5rem 0.6rem;
+      border: 1px solid #cbd5e1;
+      font-size: 9pt;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    tbody td {
+      padding: 0.4rem 0.6rem;
+      border: 1px solid #e2e8f0;
+      vertical-align: top;
+    }
+
+    tbody tr:nth-child(even) {
+      background: #f8fafc;
+    }
+
+    /* ---- CODE / PRE (ASCII diagrams) ---- */
+    pre {
+      background: #0f172a;
+      color: #e2e8f0;
+      padding: 1rem 1.2rem;
+      border-radius: 6px;
+      font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+      font-size: 8.5pt;
+      line-height: 1.55;
+      overflow-x: auto;
+      margin: 0.8rem 0 1.2rem;
+      page-break-inside: avoid;
+      break-inside: avoid;
+      white-space: pre;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    code {
+      font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+      font-size: 9.5pt;
+      background: #f1f5f9;
+      color: #6366f1;
+      padding: 0.1em 0.35em;
+      border-radius: 3px;
+    }
+
+    pre code {
+      background: transparent;
+      color: inherit;
+      padding: 0;
+    }
+
+    /* ---- SECTION DIVIDER ---- */
+    .section {
+      page-break-before: auto;
+    }
+
+    .section-major {
+      page-break-before: always;
+      break-before: page;
+    }
+
+    hr {
+      border: none;
+      border-top: 1px solid #e2e8f0;
+      margin: 1.5rem 0;
+    }
+
+    /* ---- EVIDENCE BOXES ---- */
+    .evidence {
+      background: #fefce8;
+      border: 1px solid #fde68a;
+      border-radius: 6px;
+      padding: 0.8rem 1rem;
+      margin: 0.8rem 0;
+      font-size: 10pt;
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+
+    .evidence-title {
+      font-weight: 600;
+      color: #92400e;
+      font-size: 9pt;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.3rem;
+    }
+
+    /* ---- HIGHLIGHT BOX ---- */
+    .highlight-box {
+      background: #eef2ff;
+      border: 1px solid #c7d2fe;
+      border-radius: 6px;
+      padding: 0.8rem 1rem;
+      margin: 0.8rem 0;
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+
+    /* ---- BADGE ---- */
+    .badge {
+      display: inline-block;
+      font-size: 8pt;
+      font-weight: 600;
+      padding: 0.15em 0.5em;
+      border-radius: 3px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .badge--green { background: #dcfce7; color: #166534; }
+    .badge--blue  { background: #dbeafe; color: #1e40af; }
+    .badge--amber { background: #fef3c7; color: #92400e; }
+
+    /* ---- COMPARISON VERDICT ---- */
+    .verdict {
+      background: #f0fdf4;
+      border-left: 4px solid #22c55e;
+      padding: 0.6rem 1rem;
+      margin: 1rem 0;
+      font-weight: 500;
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+
+    /* ---- LAW SECTION ---- */
+    .law-section {
+      margin: 1.5rem 0;
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+
+    .law-section h4 {
+      color: #6366f1;
+      font-size: 12pt;
+      font-weight: 700;
+    }
+
+    /* ---- PRINT OVERRIDES ---- */
+    @media print {
+      body {
+        font-size: 10.5pt;
+      }
+
+      a {
+        color: #1e293b;
+        text-decoration: none;
+      }
+
+      .cover {
+        min-height: 0;
+        height: 100vh;
+      }
+
+      pre {
+        font-size: 8pt;
+      }
+
+      table {
+        font-size: 9pt;
+      }
+    }
+  </style>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!-- ================================================================
+     PORTADA
+     ================================================================ -->
+<div class="cover">
+  <div class="cover__logo">📦</div>
+  <div class="cover__title">DropShip Pro</div>
+  <div class="cover__subtitle">Plataforma de Dropshipping White Label</div>
+  <div class="cover__line"></div>
+  <div class="cover__meta">
+    <strong>Asignatura:</strong> Front-End con Enfoque UX/UI<br>
+    <strong>Actividad:</strong> Unidad 2 — Actividad Sumativa<br>
+    <strong>Tecnología:</strong> React 19 + Vite 8 + React Router DOM 7<br>
+    <strong>Fecha:</strong> Julio 2025
+  </div>
+</div>
+
+<!-- ================================================================
+     TABLA DE CONTENIDOS
+     ================================================================ -->
+<div class="toc">
+  <h2>Tabla de Contenidos</h2>
+  <ol>
+    <li><a href="#s1"><span class="toc__number">1.</span> Contexto y Problema Empresarial</a>
+      <div class="toc__sub">1.1 Contexto del Mercado · 1.2 Problema Empresarial · 1.3 Solución Propuesta · 1.4 Público Objetivo · 1.5 Análisis Estratégico (VRIO)</div>
+    </li>
+    <li><a href="#s2"><span class="toc__number">2.</span> Descripción General</a></li>
+    <li><a href="#s3"><span class="toc__number">3.</span> Módulos Implementados</a>
+      <div class="toc__sub">3.1 Panel del Vendedor · 3.2 Gestión de Pedidos y Envíos · 3.3 Inventario y Bodega · 3.4 Pagos y Billetera Virtual</div>
+    </li>
+    <li><a href="#s4"><span class="toc__number">4.</span> Justificación del Framework: React</a>
+      <div class="toc__sub">4.1 Comparativa Técnica · 4.2 Criterios Técnicos · 4.3 Criterios Arquitectónicos · 4.4 Criterios de Mantenibilidad · 4.5 Conclusión</div>
+    </li>
+    <li><a href="#s5"><span class="toc__number">5.</span> Diseño UX/UI y Leyes Cognitivas</a>
+      <div class="toc__sub">5.1 Design Tokens · 5.2 Jerarquía Visual · 5.3 Accesibilidad · 5.4 Leyes Cognitivas (5) · 5.5 Resumen</div>
+    </li>
+    <li><a href="#s6"><span class="toc__number">6.</span> Gestión de Estado y Arquitectura</a>
+      <div class="toc__sub">6.1 Arquitectura General · 6.2 Esquema de Estado · 6.3 Flujo de Datos · 6.4 Componentes · 6.5 Patrón Reducer · 6.6 Separación Global/Local · 6.7 Evolución</div>
+    </li>
+    <li><a href="#s7"><span class="toc__number">7.</span> Stack Tecnológico</a></li>
+    <li><a href="#s8"><span class="toc__number">8.</span> Estructura del Proyecto</a></li>
+    <li><a href="#s9"><span class="toc__number">9.</span> Cómo Ejecutar</a></li>
+    <li><a href="#s10"><span class="toc__number">10.</span> Flujo Lógico del Proceso</a></li>
+  </ol>
+</div>
+
+<!-- ================================================================
+     SECCIÓN 1 — CONTEXTO Y PROBLEMA EMPRESARIAL
+     ================================================================ -->
+<div class="section-major" id="s1">
+  <h1>1. Contexto y Problema Empresarial</h1>
+
+  <h2>1.1 Contexto del Mercado</h2>
+  <p>El comercio electrónico en Latinoamérica experimentó un crecimiento del 25&nbsp;% anual entre 2020 y 2025, impulsado por la adopción digital post-pandemia. Dentro de este ecosistema, el modelo de <strong>dropshipping</strong> ha emergido como una alternativa de bajo riesgo para emprendedores que desean vender productos sin inversión en inventario físico. Sin embargo, el mercado latinoamericano presenta desafíos estructurales que las plataformas globales (Oberlo, Spocket) no resuelven:</p>
+  <ul>
+    <li><strong>Fragmentación logística:</strong> La infraestructura de envíos varía significativamente entre países y ciudades, requiriendo integración con operadores locales.</li>
+    <li><strong>Desconfianza del comprador:</strong> El consumidor latinoamericano valora la identidad de marca; recibir un paquete de una bodega desconocida genera devoluciones y baja recompra.</li>
+    <li><strong>Informalidad financiera:</strong> Muchos vendedores operan sin acceso a pasarelas internacionales, necesitando soluciones de billetera prepago.</li>
+  </ul>
+
+  <h2>1.2 Problema Empresarial Identificado</h2>
+  <p>Los micro y pequeños vendedores de dropshipping enfrentan una <strong>ruptura operativa crítica</strong> entre tres procesos que hoy gestionan manualmente o con herramientas desconectadas:</p>
+
+  <table>
+    <thead>
+      <tr><th>Proceso</th><th>Dolor actual</th><th>Consecuencia</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Selección de productos</strong></td>
+        <td>Revisión manual de catálogos de proveedores en hojas de cálculo</td>
+        <td>Errores de precio, productos descontinuados, márgenes mal calculados</td>
+      </tr>
+      <tr>
+        <td><strong>Gestión de envíos</strong></td>
+        <td>Copiar/pegar datos del comprador entre WhatsApp y formularios del proveedor</td>
+        <td>Envíos con datos erróneos, paquetes sin identidad de marca, tiempos de respuesta &gt;24h</td>
+      </tr>
+      <tr>
+        <td><strong>Sincronización de inventario</strong></td>
+        <td>Sin visibilidad en tiempo real del stock del proveedor</td>
+        <td>Sobreventa (vender productos agotados), cancelaciones, pérdida de reputación</td>
+      </tr>
+      <tr>
+        <td><strong>Control financiero</strong></td>
+        <td>Transferencias manuales por cada pedido, sin registro centralizado</td>
+        <td>Descontrol de márgenes, imposibilidad de escalar, riesgo de pérdida</td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Esta desconexión genera un <strong>cuello de botella operativo</strong> que limita al vendedor a procesar ~15 pedidos/día manualmente, cuando el potencial de mercado permitiría 50+.</p>
+
+  <h2>1.3 Solución Propuesta</h2>
+  <p><strong>DropShip Pro</strong> es una plataforma web SPA (Single Page Application) de <strong>marca blanca (White Label)</strong> que integra en un único panel los cuatro procesos críticos del dropshipping:</p>
+
+  <pre><code>┌─────────────────────────────────────────────────────────────┐
+│                     DROPSHIP PRO                            │
+│                                                             │
+│  ┌──────────┐  ┌──────────────┐  ┌───────────┐  ┌────────┐│
+│  │ Catálogo │→│  Personalizar │→│  Gestión  │→│Billetera││
+│  │ Sourcing │  │  Marca Blanca│  │  Pedidos  │  │ Virtual ││
+│  └──────────┘  └──────────────┘  └───────────┘  └────────┘│
+│       ↕              ↕                ↕             ↕      │
+│  ┌─────────────────────────────────────────────────────────┐│
+│  │         BODEGA — Stock en Tiempo Real                   ││
+│  │         Picking &amp; Packing con Etiqueta del Vendedor     ││
+│  └─────────────────────────────────────────────────────────┘│
+└─────────────────────────────────────────────────────────────┘</code></pre>
+
+  <div class="highlight-box">
+    <strong>Propuesta de valor diferencial:</strong>
+    <ul>
+      <li>El comprador final <strong>nunca ve</strong> los datos de la bodega; todo el paquete lleva la identidad visual del vendedor.</li>
+      <li>La <strong>calculadora de márgenes</strong> integrada elimina errores de pricing.</li>
+      <li>La <strong>billetera prepago</strong> permite despachos automáticos sin intervención manual por cada pedido.</li>
+      <li>Las <strong>alertas de stock bajo</strong> previenen la sobreventa antes de que ocurra.</li>
+    </ul>
+  </div>
+
+  <h2>1.4 Público Objetivo</h2>
+  <table>
+    <thead>
+      <tr><th>Segmento</th><th>Perfil</th><th>Necesidad principal</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Vendedores emprendedores</strong></td>
+        <td>Personas de 20-40 años que venden por redes sociales (Instagram, TikTok) sin tienda propia</td>
+        <td>Simplicidad operativa, marca profesional, bajo costo de entrada</td>
+      </tr>
+      <tr>
+        <td><strong>Micro-empresas e-commerce</strong></td>
+        <td>Negocios con 1-5 empleados que ya tienen tienda online pero buscan ampliar catálogo sin inventario</td>
+        <td>Integración con su marca existente, márgenes transparentes, escalabilidad</td>
+      </tr>
+      <tr>
+        <td><strong>Operadores de bodega</strong></td>
+        <td>Proveedores/bodegas que quieren ofrecer servicio de fulfillment white label</td>
+        <td>Gestión de pedidos entrantes, picking eficiente, sincronización de stock</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>1.5 Análisis Estratégico</h2>
+  <p><strong>Modelo de negocio:</strong> La plataforma genera ingresos por comisión (5&nbsp;%) sobre cada transacción + fees de fulfillment, alineando el éxito de la plataforma con el del vendedor.</p>
+
+  <h3>Ventaja competitiva (VRIO)</h3>
+  <table>
+    <thead>
+      <tr><th>Recurso</th><th>Valioso</th><th>Raro</th><th>Inimitable</th><th>Organizado</th><th>Resultado</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Marca blanca nativa</td><td>✅</td><td>✅</td><td>⬜</td><td>✅</td><td>Ventaja temporal</td></tr>
+      <tr><td>Billetera prepago integrada</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td><strong>Ventaja sostenible</strong></td></tr>
+      <tr><td>UX mobile-first en español</td><td>✅</td><td>✅</td><td>⬜</td><td>✅</td><td>Ventaja temporal</td></tr>
+      <tr><td>Stock real-time + alertas</td><td>✅</td><td>⬜</td><td>⬜</td><td>✅</td><td>Paridad competitiva</td></tr>
+    </tbody>
+  </table>
+
+  <div class="highlight-box">
+    <strong>Tipo de aplicación: SPA (Single Page Application)</strong> — justificada porque:
+    <ul>
+      <li>Los vendedores trabajan en <strong>sesiones prolongadas</strong> (minutos a horas) gestionando múltiples pedidos.</li>
+      <li>La <strong>navegación entre módulos es frecuente</strong> (catálogo → lista → envío → pedidos).</li>
+      <li>El <strong>estado global</strong> (saldo de billetera, lista de productos, tema) se preserva entre vistas.</li>
+      <li>La <strong>carga inicial única</strong> evita tiempos de espera en cada pantalla, crítico para usuarios con conectividad irregular.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ================================================================
+     SECCIÓN 2 — DESCRIPCIÓN GENERAL
+     ================================================================ -->
+<div class="section" id="s2">
+  <h1>2. Descripción General</h1>
+  <p>Plataforma web SPA para vendedores de dropshipping con marca blanca, desarrollada con <strong>React 19 + Vite 8</strong>. Permite a los vendedores explorar un catálogo de productos sourcing, personalizar su identidad de marca, gestionar pedidos y envíos, controlar inventario y bodega, y administrar una billetera virtual — todo desde un panel unificado con diseño responsivo y modo oscuro.</p>
+</div>
+
+<!-- ================================================================
+     SECCIÓN 3 — MÓDULOS IMPLEMENTADOS
+     ================================================================ -->
+<div class="section" id="s3">
+  <h1>3. Módulos Implementados</h1>
+
+  <h2>3.1 Panel del Vendedor</h2>
+  <ul>
+    <li><strong>Dashboard:</strong> Métricas KPI (ventas, pedidos, margen), pedidos recientes, actividad</li>
+    <li><strong>Catálogo Sourcing:</strong> Explorador de productos con filtros por categoría, búsqueda incremental, rating y calculadora de márgenes</li>
+    <li><strong>Mi Lista:</strong> Productos seleccionados por el vendedor para su inventario virtual</li>
+    <li><strong>Personalización de Marca:</strong> Logo, nombre comercial, dirección de remitente con previsualización en vivo de etiqueta</li>
+  </ul>
+
+  <h2>3.2 Gestión de Pedidos y Envíos</h2>
+  <ul>
+    <li><strong>Mis Pedidos:</strong> Tabla con estados (Pendiente → Procesando → En Tránsito → Entregado)</li>
+    <li><strong>Nuevo Envío:</strong> Wizard multi-paso (Producto → Datos Comprador → Despacho)</li>
+    <li><strong>Programación de Despacho:</strong> Inmediato o fecha programada</li>
+    <li><strong>Calculadora de Márgenes:</strong> Costo base, precio venta, comisiones, utilidad neta</li>
+  </ul>
+
+  <h2>3.3 Inventario y Bodega (Admin)</h2>
+  <ul>
+    <li><strong>Inventario:</strong> Tabla con SKU, stock, niveles, barras visuales, alertas de reabastecimiento</li>
+    <li><strong>Picking &amp; Packing:</strong> Interfaz para empacar pedidos con etiqueta white-label del vendedor</li>
+  </ul>
+
+  <h2>3.4 Pagos y Billetera Virtual</h2>
+  <ul>
+    <li><strong>Saldo:</strong> Balance en tiempo real con recarga rápida (grid de montos predefinidos)</li>
+    <li><strong>Historial:</strong> Transacciones de recargas y pagos de órdenes con timeline</li>
+  </ul>
+</div>
+
+<!-- ================================================================
+     SECCIÓN 4 — JUSTIFICACIÓN DEL FRAMEWORK
+     ================================================================ -->
+<div class="section-major" id="s4">
+  <h1>4. Justificación del Framework: React</h1>
+
+  <h2>4.1 Comparativa Técnica — React vs Angular vs Vue</h2>
+  <p>Se evaluaron los tres frameworks líderes del mercado bajo criterios específicos para una plataforma de dropshipping white label:</p>
+
+  <table>
+    <thead>
+      <tr><th>Criterio</th><th>React 19</th><th>Angular 17</th><th>Vue 3</th><th>Relevancia para DropShip Pro</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Curva de aprendizaje</strong></td>
+        <td>Baja-media</td>
+        <td>Alta (TS obligatorio, decoradores, DI)</td>
+        <td>Baja</td>
+        <td>Equipo emprendedor sin devs senior; React permite onboarding rápido</td>
+      </tr>
+      <tr>
+        <td><strong>Arquitectura</strong></td>
+        <td>Librería + composición libre</td>
+        <td>Framework opinionado (monolítico)</td>
+        <td>Framework progresivo</td>
+        <td>Flexibilidad para crecer módulo a módulo sin overhead inicial</td>
+      </tr>
+      <tr>
+        <td><strong>Rendering model</strong></td>
+        <td>Virtual DOM + Fiber reconciler</td>
+        <td>Zone.js + change detection</td>
+        <td>Proxy-based reactivity</td>
+        <td>Virtual DOM predecible con muchos componentes dinámicos</td>
+      </tr>
+      <tr>
+        <td><strong>Bundle size (min+gzip)</strong></td>
+        <td>~44 KB</td>
+        <td>~130 KB</td>
+        <td>~33 KB</td>
+        <td>React equilibra tamaño y ecosistema</td>
+      </tr>
+      <tr>
+        <td><strong>Ecosistema y comunidad</strong></td>
+        <td>1.º npm (20M+ desc/sem)</td>
+        <td>3.º</td>
+        <td>2.º</td>
+        <td>Mayor disponibilidad de librerías para routing, iconos, charts</td>
+      </tr>
+      <tr>
+        <td><strong>Estado global</strong></td>
+        <td>Context API + useReducer nativo</td>
+        <td>RxJS + Services (complejo)</td>
+        <td>Pinia (excelente, ecosistema menor)</td>
+        <td>Context + useReducer cubre el caso sin dependencias externas</td>
+      </tr>
+      <tr>
+        <td><strong>Integración con Vite</strong></td>
+        <td>Nativa (plugin oficial)</td>
+        <td>Parcial (CLI propio)</td>
+        <td>Nativa</td>
+        <td>Vite 8 ofrece HMR instantáneo con React</td>
+      </tr>
+      <tr>
+        <td><strong>Código reutilizable</strong></td>
+        <td>Hooks composables</td>
+        <td>Services + DI</td>
+        <td>Composables</td>
+        <td>Custom hooks extraen lógica sin acoplamiento a UI</td>
+      </tr>
+      <tr>
+        <td><strong>Testing</strong></td>
+        <td>Vitest + RTL (ligero)</td>
+        <td>Karma/Jasmine (pesado)</td>
+        <td>Vitest + VTU</td>
+        <td>RTL promueve tests centrados en el usuario (alineado con UX)</td>
+      </tr>
+      <tr>
+        <td><strong>Contratación LATAM</strong></td>
+        <td>Alta demanda</td>
+        <td>Media</td>
+        <td>Baja-media</td>
+        <td>68&nbsp;% de ofertas frontend en LATAM piden React (2025)</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>4.2 Criterios Técnicos de Selección</h2>
+
+  <h3>1. Composición basada en componentes funcionales</h3>
+  <p>React permite construir cada módulo como un árbol de componentes puros con estado local (<code>useState</code>) o compartido (<code>useContext</code>). En DropShip Pro esto se traduce en:</p>
+  <pre><code>&lt;Layout&gt;                         → Sidebar + Header (estado global: tema, wallet)
+  &lt;Catalog&gt;                      → Estado local: filtros, búsqueda
+    &lt;ProductCard&gt;                → Presentacional puro
+      &lt;MarginCalculator&gt;         → Modal con lógica de cálculo aislada
+  &lt;Shipping&gt;                     → Wizard multi-paso con estado local por step</code></pre>
+  <p>Cada componente es <strong>testeable de forma aislada</strong> y <strong>reemplazable</strong> sin afectar otros módulos.</p>
+
+  <h3>2. Flujo de datos unidireccional</h3>
+  <p>React fuerza un flujo <code>props ↓ + callbacks ↑</code> que previene mutaciones accidentales del estado. En una plataforma financiera (billetera, transacciones), esto es crítico:</p>
+  <pre><code>AppContext (wallet.balance)
+    ↓ props
+  Header (muestra saldo)
+  Wallet (permite recargar)
+    ↑ dispatch({ type: 'UPDATE_WALLET' })</code></pre>
+  <p>Angular con two-way binding (<code>[(ngModel)]</code>) introduce riesgo de side-effects no rastreables en componentes con datos financieros.</p>
+
+  <h3>3. Hook pattern para lógica de negocio reutilizable</h3>
+  <p>Los hooks de React permiten encapsular lógica sin crear clases ni servicios inyectados:</p>
+  <pre><code>// Ejemplo conceptual: lógica de márgenes extraíble como hook
+function useMarginCalculator(costPrice) {
+  const [salePrice, setSalePrice] = useState(0)
+  const commission = Math.round(salePrice * 0.05)
+  const netProfit = salePrice - costPrice - commission
+  const margin = salePrice > 0 ? Math.round((netProfit / salePrice) * 100) : 0
+  return { salePrice, setSalePrice, commission, netProfit, margin }
+}</code></pre>
+  <p>Esto fomenta la <strong>separación de concerns</strong> sin el boilerplate de Angular (service + module + provider + inject).</p>
+
+  <h2>4.3 Criterios Arquitectónicos</h2>
+  <table>
+    <thead>
+      <tr><th>Decisión arquitectónica</th><th>Implementación en React</th><th>Alternativa Angular/Vue</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Routing declarativo</strong></td>
+        <td><code>&lt;Route path="catalogo" element={&lt;Catalog /&gt;} /&gt;</code> — mapeo 1:1 ruta-componente, lazy-load trivial</td>
+        <td>Angular: RouterModule con config separada + guards. Vue: similar pero menor ecosistema de middleware</td>
+      </tr>
+      <tr>
+        <td><strong>Estado global ligero</strong></td>
+        <td><code>Context + useReducer</code> — 55 líneas en <code>AppContext.jsx</code>, cero dependencias</td>
+        <td>Angular: RxJS + BehaviorSubject (~200 líneas). Vue: Pinia (comparable pero ecosistema menor)</td>
+      </tr>
+      <tr>
+        <td><strong>Theming (dark mode)</strong></td>
+        <td>CSS custom properties + <code>data-theme</code> toggled por React state</td>
+        <td>Framework-agnóstico, pero React lo integra limpiamente con <code>dispatch('TOGGLE_THEME')</code></td>
+      </tr>
+      <tr>
+        <td><strong>Code splitting</strong></td>
+        <td><code>React.lazy()</code> + <code>Suspense</code> — nativo</td>
+        <td>Angular: lazy modules (más verbose). Vue: <code>defineAsyncComponent</code></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>4.4 Criterios de Mantenibilidad</h2>
+  <h3>Estructura predecible por convención</h3>
+  <pre><code>src/pages/[Módulo]/
+  ├── Módulo.jsx     → Componente principal (lógica + render)
+  └── Módulo.css     → Estilos co-ubicados (fácil de encontrar, modificar, eliminar)</code></pre>
+  <p>Cada módulo es <strong>auto-contenido</strong>: eliminar la carpeta <code>pages/Wallet/</code> elimina 100&nbsp;% del código de billetera sin efectos colaterales en otros módulos.</p>
+
+  <h3>Escalabilidad progresiva</h3>
+  <table>
+    <thead>
+      <tr><th>Etapa del producto</th><th>Complejidad</th><th>Solución en React</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>MVP (actual)</td><td>9 vistas, 1 contexto</td><td>Context + useReducer</td></tr>
+      <tr><td>Crecimiento</td><td>20+ vistas, API real</td><td>React Query para server state + Context para UI state</td></tr>
+      <tr><td>Empresa</td><td>Multi-tenant, i18n, analytics</td><td>Zustand/Redux Toolkit + React Router loaders + Suspense boundaries</td></tr>
+    </tbody>
+  </table>
+  <p>React <strong>no impone</strong> arquitectura de enterprise en el día 1, pero <strong>permite escalar</strong> sin reescritura. Angular impone la complejidad de enterprise desde el inicio, innecesaria para un MVP.</p>
+
+  <h2>4.5 Conclusión</h2>
+  <div class="verdict">
+    React fue seleccionado porque:
+    <ol>
+      <li><strong>Técnicamente</strong> ofrece el mejor equilibrio tamaño/ecosistema para una SPA con múltiples módulos dinámicos.</li>
+      <li><strong>Arquitectónicamente</strong> su flujo unidireccional y hooks garantizan predictibilidad en módulos financieros (billetera, transacciones).</li>
+      <li><strong>En mantenibilidad</strong> su estructura modular permite crecer de MVP a plataforma enterprise sin reescritura, con la mayor disponibilidad de talento en LATAM.</li>
+    </ol>
+  </div>
+</div>
+
+<!-- ================================================================
+     SECCIÓN 5 — DISEÑO UX/UI Y LEYES COGNITIVAS
+     ================================================================ -->
+<div class="section-major" id="s5">
+  <h1>5. Diseño UX/UI y Aplicación de Leyes Cognitivas</h1>
+
+  <h2>5.1 Sistema de Diseño — Design Tokens</h2>
+  <p>Todos los valores visuales están centralizados en <strong>CSS Custom Properties</strong> dentro de <code>global.css</code>, funcionando como <strong>design tokens</strong> que garantizan consistencia en las 9 vistas de la aplicación:</p>
+
+  <table>
+    <thead>
+      <tr><th>Categoría</th><th>Tokens</th><th>Ejemplo</th><th>Propósito</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>Color — Semánticos</strong></td><td>10 tokens</td><td><code>--color-primary: #6366f1</code></td><td>Identidad de marca + comunicación de estado</td></tr>
+      <tr><td><strong>Color — Superficies</strong></td><td>7 tokens</td><td><code>--color-surface</code> · <code>--color-border</code></td><td>Capas de profundidad visual</td></tr>
+      <tr><td><strong>Espaciado</strong></td><td>6 tokens</td><td><code>--space-xs</code> (4px) → <code>--space-2xl</code> (48px)</td><td>Escala consistente de 4px base</td></tr>
+      <tr><td><strong>Tipografía</strong></td><td>7 tokens</td><td><code>--font-size-xs</code> (12px) → <code>--font-size-3xl</code> (30px)</td><td>Jerarquía de lectura predecible</td></tr>
+      <tr><td><strong>Radio de borde</strong></td><td>4 tokens</td><td><code>--radius-sm</code> → <code>--radius-xl</code></td><td>Suavidad visual consistente</td></tr>
+      <tr><td><strong>Sombras</strong></td><td>3 tokens</td><td><code>--shadow-sm</code> → <code>--shadow-lg</code></td><td>Profundidad y elevación</td></tr>
+      <tr><td><strong>Transiciones</strong></td><td>2 tokens</td><td><code>--transition-fast</code> (150ms) · <code>--transition-base</code> (250ms)</td><td>Animaciones perceptualmente consistentes</td></tr>
+    </tbody>
+  </table>
+  <p><strong>Modo oscuro</strong> implementado mediante <code>[data-theme="dark"]</code> que sobreescribe los tokens de superficie y texto — un solo toggle afecta toda la app porque cada componente referencia tokens, nunca colores literales.</p>
+
+  <h2>5.2 Jerarquía Visual</h2>
+  <p>La jerarquía se construye en 4 niveles, cada uno con un rol perceptual claro:</p>
+  <pre><code>Nivel 1 — ESCANEO RÁPIDO (KPIs del Dashboard)
+┌──────────────────────────────────────────────────┐
+│  💰 $2.340.000    📦 23 Pedidos    📊 62% Margen │  ← font-size-2xl + font-weight-700
+│  Ventas del mes    Activos hoy      Promedio     │  ← font-size-sm + color-text-secondary
+│  +12.5% ↑          +3 hoy ↑        +2.1% ↑      │  ← font-size-xs + color-success/danger
+└──────────────────────────────────────────────────┘
+
+Nivel 2 — LECTURA DIRIGIDA (Tablas de pedidos/inventario)
+┌──────┬─────────────────┬──────────┬──────────────┐
+│ ID   │ Producto         │ Estado   │ Monto        │  ← Columnas con th en UPPERCASE xs
+│ 001  │ Lámpara LED      │ 🟢 Entr │ $89.900      │  ← Badges de color semántico
+└──────┴─────────────────┴──────────┴──────────────┘
+
+Nivel 3 — EXPLORACIÓN (Catálogo de productos)
+┌────────────────┐  Categoría en PRIMARY + UPPERCASE xs
+│    💡 (48px)    │  Nombre en font-weight-600
+│  Costo → Precio│  Precios con color-secondary (verde)
+│  [Agregar] [Calc]│  CTAs con jerarquía primary/secondary
+└────────────────┘
+
+Nivel 4 — CONTEXTUAL (Actividad, notificaciones, tooltips)
+  → font-size-xs + color-text-muted</code></pre>
+
+  <h2>5.3 Accesibilidad (a11y)</h2>
+  <table>
+    <thead>
+      <tr><th>Práctica implementada</th><th>Archivo</th><th>Ejemplo concreto</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>Labels semánticos</strong></td><td>Layout.jsx</td><td><code>&lt;nav aria-label="Navegación principal"&gt;</code></td></tr>
+      <tr><td><strong>Botones con aria-label</strong></td><td>Layout.jsx</td><td><code>&lt;button aria-label="Toggle sidebar"&gt;</code></td></tr>
+      <tr><td><strong>Roles y landmark</strong></td><td>Layout.jsx</td><td><code>&lt;aside&gt;</code> como sidebar, <code>&lt;header&gt;</code>, <code>&lt;main&gt;</code></td></tr>
+      <tr><td><strong>Alertas accesibles</strong></td><td>Inventory.jsx</td><td><code>&lt;div role="alert"&gt;</code> en alertas de stock bajo</td></tr>
+      <tr><td><strong>Labels de formulario</strong></td><td>Brand.jsx, Shipping.jsx</td><td><code>&lt;label htmlFor="brandName"&gt;</code> vinculado a input</td></tr>
+      <tr><td><strong>Contraste de color</strong></td><td>global.css</td><td>Texto <code>#0f172a</code> sobre fondo <code>#f8fafc</code> = ratio 15.4:1 (WCAG AAA)</td></tr>
+      <tr><td><strong>Focus visible</strong></td><td>Catalog.css</td><td>Anillo de foco con <code>box-shadow: 0 0 0 3px</code></td></tr>
+      <tr><td><strong>Textos alternativos</strong></td><td>Dashboard</td><td>Badges con texto legible, no solo color</td></tr>
+    </tbody>
+  </table>
+
+  <h2>5.4 Leyes Cognitivas Aplicadas</h2>
+
+  <!-- LEY 1: HICK -->
+  <div class="law-section">
+    <h4>LEY 1: Ley de Hick — <em>El tiempo de decisión aumenta con el número de opciones</em></h4>
+    <blockquote>
+      "El tiempo que toma tomar una decisión aumenta logarítmicamente con el número y complejidad de las opciones." — William Edmund Hick, 1952
+    </blockquote>
+    <p><strong>Problema UX:</strong> El catálogo tiene 12+ productos que el vendedor debe evaluar. Sin estructura, el usuario se paraliza ante demasiadas opciones simultáneas.</p>
+
+    <table>
+      <thead>
+        <tr><th>Técnica</th><th>Implementación</th><th>Archivo</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Filtros por categoría</strong></td><td>Chips que reducen la vista a 2-4 productos por categoría</td><td>Catalog.jsx</td></tr>
+        <tr><td><strong>Búsqueda incremental</strong></td><td>Input que filtra en tiempo real conforme se escribe</td><td>Catalog.jsx</td></tr>
+        <tr><td><strong>Wizard de 3 pasos</strong></td><td>En vez de un formulario de 8+ campos, se divide en 3 micro-decisiones</td><td>Shipping.jsx</td></tr>
+      </tbody>
+    </table>
+
+    <div class="evidence">
+      <div class="evidence-title">Evidencia en código</div>
+      <pre><code>// Shipping.jsx — Wizard divide la decisión en 3 micro-decisiones
+const STEPS = ['Producto', 'Datos del Comprador', 'Despacho']
+// El usuario solo ve los campos de UN paso a la vez</code></pre>
+    </div>
+    <p><strong>Resultado:</strong> El vendedor nunca enfrenta más de 3-4 decisiones simultáneas en cualquier pantalla.</p>
+  </div>
+
+  <!-- LEY 2: GESTALT -->
+  <div class="law-section">
+    <h4>LEY 2: Ley de Proximidad de Gestalt — <em>Los elementos cercanos se perciben como relacionados</em></h4>
+    <blockquote>
+      "Los objetos que están cerca unos de otros tienden a ser percibidos como un grupo." — Max Wertheimer, 1923
+    </blockquote>
+    <p><strong>Problema UX:</strong> El Dashboard muestra KPIs, pedidos recientes y actividad. Sin agrupación perceptual, el usuario no distingue qué datos van juntos.</p>
+
+    <table>
+      <thead>
+        <tr><th>Agrupación</th><th>Elementos</th><th>Separación</th><th>Archivo</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>KPIs como banda</strong></td><td>4 tarjetas con icono+valor+cambio</td><td><code>gap: var(--space-md)</code> entre tarjetas, <code>gap: var(--space-xl)</code> al contenido</td><td>Dashboard.css</td></tr>
+        <tr><td><strong>Sidebar: secciones</strong></td><td>Links por función (Vendedor, Pedidos, Bodega, Finanzas)</td><td><code>padding-top: var(--space-lg)</code> entre grupos</td><td>Layout.css</td></tr>
+        <tr><td><strong>Product card: info</strong></td><td>Precio + margen + costo en mismo bloque</td><td><code>gap: var(--space-sm)</code></td><td>Catalog.css</td></tr>
+        <tr><td><strong>Picking card</strong></td><td>ID orden + producto + datos + marca + estado</td><td><code>gap: var(--space-lg)</code> entre bloques</td><td>Inventory.css</td></tr>
+      </tbody>
+    </table>
+
+    <div class="evidence">
+      <div class="evidence-title">Evidencia en código</div>
+      <pre><code>/* Layout.css — Espaciado mayor ENTRE secciones vs DENTRO de secciones */
+.sidebar__section-title {
+  padding: var(--space-lg) var(--space-xl) var(--space-sm); /* ↑ 24px arriba, ↓ 8px abajo */
+}
+.sidebar__link {
+  padding: var(--space-sm) var(--space-xl);                 /* Solo 8px vertical entre links */
+}
+/* La diferencia 24px vs 8px crea grupos perceptuales sin líneas divisorias */</code></pre>
+    </div>
+    <p><strong>Resultado:</strong> El usuario identifica inmediatamente 4 grupos funcionales en el sidebar sin necesidad de etiquetas explícitas.</p>
+  </div>
+
+  <!-- LEY 3: FITTS -->
+  <div class="law-section">
+    <h4>LEY 3: Ley de Fitts — <em>El tiempo para alcanzar un objetivo depende de su tamaño y distancia</em></h4>
+    <blockquote>
+      "El tiempo requerido para moverse rápidamente hacia un área objetivo es función de la distancia al objetivo y el tamaño del objetivo." — Paul Fitts, 1954
+    </blockquote>
+    <p><strong>Problema UX:</strong> Los CTAs principales (Agregar producto, Crear envío, Recargar billetera) deben ser fáciles de alcanzar y clickear, especialmente en mobile.</p>
+
+    <table>
+      <thead>
+        <tr><th>Elemento</th><th>Técnica de Fitts</th><th>Implementación</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Botón "Recargar"</strong></td><td>Full-width en su contenedor</td><td><code>.btn--full { width: 100% }</code></td></tr>
+        <tr><td><strong>Chips de recarga</strong></td><td>Áreas amplias (16px padding) en grid de 3 columnas</td><td><code>.recharge-btn { padding: var(--space-md) }</code></td></tr>
+        <tr><td><strong>Sidebar links</strong></td><td>Área de click abarca toda la fila, no solo el texto</td><td><code>padding: var(--space-sm) var(--space-xl)</code></td></tr>
+        <tr><td><strong>Product card CTA</strong></td><td>Botones en footer de tarjeta (zona inferior del patrón F de lectura)</td><td>Catalog.jsx — <code>.product-card__footer</code></td></tr>
+      </tbody>
+    </table>
+
+    <div class="evidence">
+      <div class="evidence-title">Evidencia en código</div>
+      <pre><code>/* Wallet.css — Target áreas grandes para Ley de Fitts */
+.recharge-btn {
+  padding: var(--space-md);         /* 16px en todas las direcciones */
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+.recharge-btn:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}</code></pre>
+    </div>
+    <p><strong>Resultado:</strong> Las acciones de mayor impacto financiero (recargar, pagar, enviar) tienen las áreas de interacción más grandes de la interfaz.</p>
+  </div>
+
+  <!-- LEY 4: JAKOB -->
+  <div class="law-section">
+    <h4>LEY 4: Ley de Jakob — <em>Los usuarios prefieren patrones familiares</em></h4>
+    <blockquote>
+      "Los usuarios pasan la mayor parte de su tiempo en otros sitios web. Esto significa que prefieren que tu sitio funcione igual que los demás." — Jakob Nielsen
+    </blockquote>
+    <p><strong>Problema UX:</strong> Los vendedores de dropshipping ya usan plataformas como Shopify, MercadoLibre o CJDropshipping. Si la UI rompe convenciones, aumenta la fricción.</p>
+
+    <table>
+      <thead>
+        <tr><th>Convención familiar</th><th>Referencia conocida</th><th>Implementación en DropShip Pro</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Sidebar izquierdo fijo</strong></td><td>Shopify Admin, Google Analytics, Notion</td><td>Layout.jsx — sidebar de 260px con logo + nav + user footer</td></tr>
+        <tr><td><strong>Header con saldo visible</strong></td><td>MercadoLibre, billeteras digitales</td><td>Header — chip de saldo con icono Wallet siempre visible</td></tr>
+        <tr><td><strong>Tabla de pedidos con badges</strong></td><td>Shopify Orders, Amazon Seller Central</td><td>Orders.jsx — badges de colores semánticos</td></tr>
+        <tr><td><strong>Cards de producto</strong></td><td>MercadoLibre, Amazon, AliExpress</td><td>Catalog.jsx — product-card con imagen, precio, rating, CTA</td></tr>
+        <tr><td><strong>Wizard con pasos numerados</strong></td><td>Checkout de cualquier e-commerce</td><td>Shipping.jsx — 3 pasos con indicador visual</td></tr>
+        <tr><td><strong>Toast de confirmación</strong></td><td>Gmail, Slack, Notion</td><td>Brand.jsx, Wallet.jsx — toast verde con animación slideIn</td></tr>
+      </tbody>
+    </table>
+    <p><strong>Resultado:</strong> Un vendedor que ya usa Shopify o MercadoLibre puede operar DropShip Pro en su primera sesión sin tutorial.</p>
+  </div>
+
+  <!-- LEY 5: MILLER -->
+  <div class="law-section">
+    <h4>LEY 5: Ley de Miller — <em>La memoria de trabajo retiene 7 ± 2 elementos</em></h4>
+    <blockquote>
+      "La capacidad de procesamiento consciente está limitada a aproximadamente 7 (± 2) chunks de información." — George A. Miller, 1956
+    </blockquote>
+    <p><strong>Problema UX:</strong> El catálogo tiene 12 productos, el inventario 10 ítems, el sidebar tiene 9 links. ¿Cómo evitar sobrecarga cognitiva?</p>
+
+    <table>
+      <thead>
+        <tr><th>Implementación</th><th>Cantidad</th><th>Estrategia de chunking</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Sidebar</strong></td><td>9 links → <strong>4 grupos</strong></td><td>Agrupación semántica: el usuario memoriza 4 categorías, no 9 ítems</td></tr>
+        <tr><td><strong>KPIs del Dashboard</strong></td><td><strong>4 métricas</strong></td><td>Dentro del rango 7±2, cada una con icono diferenciador de color</td></tr>
+        <tr><td><strong>Categorías del catálogo</strong></td><td><strong>7 categorías</strong></td><td>Exactamente en el límite de Miller — escaneo completo posible</td></tr>
+        <tr><td><strong>Tabla de pedidos</strong></td><td>5 columnas</td><td>Info de comprador colapsada en sub-texto, no en columna propia</td></tr>
+        <tr><td><strong>Steps del wizard</strong></td><td><strong>3 pasos</strong></td><td>Muy por debajo del límite — el usuario retiene todo el flujo</td></tr>
+      </tbody>
+    </table>
+
+    <div class="evidence">
+      <div class="evidence-title">Evidencia en código</div>
+      <pre><code>// Layout.jsx — 4 secciones (no 9 links sueltos)
+const NAV_SECTIONS = [
+  { title: 'Vendedor',  links: [/* 4 links */] },
+  { title: 'Pedidos',   links: [/* 2 links */] },
+  { title: 'Bodega',    links: [/* 2 links */] },
+  { title: 'Finanzas',  links: [/* 1 link  */] },
+]
+// 4 chunks, no 9 items individuales</code></pre>
+    </div>
+    <p><strong>Resultado:</strong> Ninguna vista de la aplicación presenta más de 7 elementos de navegación o decisión al mismo tiempo.</p>
+  </div>
+
+  <h2>5.5 Resumen de Leyes UX Aplicadas</h2>
+  <table>
+    <thead>
+      <tr><th>#</th><th>Ley</th><th>Dónde se aplica</th><th>Efecto</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>1</td><td><strong>Hick</strong></td><td>Filtros catálogo, wizard 3 pasos, búsqueda incremental</td><td>Reduce opciones simultáneas a ≤4</td></tr>
+      <tr><td>2</td><td><strong>Gestalt (Proximidad)</strong></td><td>KPIs agrupados, sidebar por secciones, info co-ubicada</td><td>Percepción de grupos sin líneas explícitas</td></tr>
+      <tr><td>3</td><td><strong>Fitts</strong></td><td>Botón recarga full-width, sidebar full-row, CTAs zona inferior</td><td>Acciones críticas → targets grandes</td></tr>
+      <tr><td>4</td><td><strong>Jakob</strong></td><td>Sidebar fijo, badges, cards e-commerce, wizard steps</td><td>Familiaridad = cero curva de aprendizaje</td></tr>
+      <tr><td>5</td><td><strong>Miller</strong></td><td>4 KPIs, 4 nav groups, 7 categorías, 3 steps</td><td>Nunca &gt;7 elementos cognitivos por vista</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ================================================================
+     SECCIÓN 6 — GESTIÓN DE ESTADO Y ARQUITECTURA
+     ================================================================ -->
+<div class="section-major" id="s6">
+  <h1>6. Gestión de Estado y Estructura Arquitectónica</h1>
+
+  <h2>6.1 Diagrama de Arquitectura General</h2>
+  <pre><code>┌─────────────────────────────────────────────────────────────────────┐
+│                        NAVEGADOR (SPA)                              │
+│                                                                     │
+│  ┌──────────────────────────────────────────────────────────────┐   │
+│  │                    React Router DOM                           │   │
+│  │   BrowserRouter → Routes → Route (Layout) → Route (Page)     │   │
+│  └────────────────────────┬─────────────────────────────────────┘   │
+│                           │                                         │
+│  ┌────────────────────────▼─────────────────────────────────────┐   │
+│  │               AppProvider (Context + useReducer)              │   │
+│  │                                                               │   │
+│  │   state: { theme, sidebarOpen, user, wallet, notifications } │   │
+│  │   dispatch: (action) → appReducer → newState                  │   │
+│  └──┬──────────┬──────────┬──────────┬──────────┬───────────────┘   │
+│     │          │          │          │          │                    │
+│  ┌──▼──┐  ┌───▼──┐  ┌───▼───┐  ┌──▼───┐  ┌──▼────┐               │
+│  │Layout│  │Dashb.│  │Catalog│  │Orders│  │Wallet │  ...pages      │
+│  │      │  │      │  │      │  │      │  │       │               │
+│  │global│  │ read │  │local │  │ read │  │read + │               │
+│  │state │  │ only │  │state │  │ only │  │write  │               │
+│  └──────┘  └──────┘  └──────┘  └──────┘  └───────┘               │
+│                                                                     │
+│  ┌──────────────────────────────────────────────────────────────┐   │
+│  │                    Capa de Datos (Mock)                        │   │
+│  │   data/mockData.js — PRODUCTS, ORDERS, WAREHOUSE, TRANSACTIONS│   │
+│  └──────────────────────────────────────────────────────────────┘   │
+│                                                                     │
+│  ┌──────────────────────────────────────────────────────────────┐   │
+│  │                    Capa de Utilidades                          │   │
+│  │   utils/helpers.js — formatCurrency, formatDate, classNames   │   │
+│  └──────────────────────────────────────────────────────────────┘   │
+└─────────────────────────────────────────────────────────────────────┘</code></pre>
+
+  <h2>6.2 Esquema de Gestión de Estado</h2>
+  <p>La aplicación distingue <strong>dos tipos de estado</strong> con estrategias diferentes, evitando un store monolítico innecesario:</p>
+
+  <h3>Estado Global (Context + useReducer)</h3>
+  <p>Estado que <strong>múltiples componentes en diferentes rutas</strong> necesitan leer o modificar:</p>
+  <pre><code>┌─────────────────────── AppContext ───────────────────────┐
+│                                                          │
+│  initialState = {                                        │
+│    theme: 'light'          ← Layout, Header (toggle)    │
+│    sidebarOpen: true       ← Layout, Header (toggle)    │
+│    user: {                                               │
+│      name, email, role     ← Header, Sidebar (display)  │
+│      brand: {                                            │
+│        name, logo, address ← Brand (write), Picking     │
+│      }                        (read etiqueta)            │
+│    }                                                     │
+│    wallet: {                                             │
+│      balance, currency     ← Header (display),          │
+│    }                          Wallet (write),            │
+│                               Shipping (validar saldo)   │
+│    notifications: 3        ← Header badge (read+clear)  │
+│  }                                                       │
+│                                                          │
+│  dispatch(action) ──→ appReducer ──→ nuevo estado        │
+└──────────────────────────────────────────────────────────┘</code></pre>
+
+  <h3>¿Por qué Context + useReducer y no Redux/Zustand?</h3>
+  <table>
+    <thead>
+      <tr><th>Criterio</th><th>Context + useReducer</th><th>Redux Toolkit</th><th>Zustand</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>Dependencias externas</strong></td><td><strong>0</strong> (nativo de React)</td><td>2 paquetes (~12 KB)</td><td>1 paquete (~1 KB)</td></tr>
+      <tr><td><strong>Boilerplate</strong></td><td>55 líneas (<code>AppContext.jsx</code>)</td><td>~120 líneas</td><td>~40 líneas</td></tr>
+      <tr><td><strong>Devtools</strong></td><td>React DevTools nativo</td><td>Redux DevTools (excelente)</td><td>Plugin separado</td></tr>
+      <tr><td><strong>Re-renders</strong></td><td>Todo el árbol bajo Provider</td><td>Selectores granulares</td><td>Selectores granulares</td></tr>
+      <tr><td><strong>Adecuado para MVP</strong></td><td><strong>✅ Sí</strong> — 5 propiedades, 5 actions</td><td>Sobredimensionado</td><td>Viable pero innecesario</td></tr>
+    </tbody>
+  </table>
+
+  <div class="verdict">
+    <strong>Decisión:</strong> Con solo <strong>5 propiedades de estado</strong> y <strong>5 acciones</strong>, Context + useReducer es la solución correcta. El re-render de todo el árbol es insignificante con este volumen de estado.
+  </div>
+
+  <h3>Estado Local (useState por componente)</h3>
+  <p>Estado que <strong>solo un componente y sus hijos</strong> necesitan — efímero, no persistente entre rutas:</p>
+  <pre><code>┌─ Catalog.jsx ─────────────────────────────┐
+│  search: ''           ← input de búsqueda │
+│  category: 'Todos'    ← filtro activo     │
+│  myList: [1, 2, 4]    ← IDs seleccionados │
+│  calcProduct: null     ← modal abierto?   │
+│  salePrice: ''        ← input calculadora │
+└───────────────────────────────────────────┘
+
+┌─ Shipping.jsx ────────────────────────────┐
+│  step: 0              ← paso del wizard   │
+│  selectedProduct: ''  ← producto elegido  │
+│  schedule: 'inmedia.' ← tipo de despacho  │
+│  buyerData: { name,   ← formulario        │
+│    address, city,                          │
+│    phone, notes }                          │
+│  submitted: false     ← estado final      │
+└───────────────────────────────────────────┘
+
+┌─ Wallet.jsx ──────────────────────────────┐
+│  selectedAmount: null ← monto a recargar  │
+│  showToast: false     ← feedback visual   │
+└───────────────────────────────────────────┘
+
+┌─ Picking.jsx ─────────────────────────────┐
+│  completedIds: []     ← pedidos empacados │
+└───────────────────────────────────────────┘</code></pre>
+
+  <h2>6.3 Flujo de Datos — Diagrama de Acciones</h2>
+  <pre><code>     USUARIO                    COMPONENTE                    ESTADO
+     ──────                    ──────────                    ──────
+
+  Click "☀️/🌙"  ──→  Header                    
+                       dispatch({ type:        ──→  appReducer
+                         'TOGGLE_THEME'              theme: 'dark'
+                       })                       ──→  [data-theme] cambia
+                                                ──→  CSS vars se actualizan
+                                                ──→  TODA la app re-renderiza
+
+  Click "Recargar    Wallet.jsx
+  $500.000"          1. setSelectedAmount(500k)  ──→  estado LOCAL
+                     2. click "Recargar"
+                     3. dispatch({               ──→  appReducer
+                          type: 'UPDATE_WALLET',      wallet.balance += 500k
+                          payload: { balance }   ──→  Header re-renderiza
+                        })
+                     4. setShowToast(true)       ──→  estado LOCAL (toast)
+
+  Guardar marca      Brand.jsx
+                     1. handleSave(e)
+                     2. dispatch({               ──→  appReducer
+                          type: 'UPDATE_BRAND',       user.brand.name = X
+                          payload: { name, addr }──→  Picking lee nuevo
+                        })                            nombre de marca
+                     3. setShowToast(true)       ──→  estado LOCAL
+
+  Buscar producto    Catalog.jsx
+  "lámpara"          setSearch('lámpara')        ──→  estado LOCAL
+                     filtered = PRODUCTS.filter  ──→  re-render solo
+                       (match search + category)      este componente</code></pre>
+
+  <h2>6.4 Diagrama de Componentes y Dependencias de Estado</h2>
+  <pre><code>App.jsx
+ │
+ ├─ AppProvider ·············· ESTADO GLOBAL (Context)
+ │   │
+ │   └─ Routes
+ │       │
+ │       └─ Layout ·········· LEE: theme, sidebarOpen, user, wallet, notifications
+ │           │                ESCRIBE: TOGGLE_THEME, TOGGLE_SIDEBAR, CLEAR_NOTIFICATIONS
+ │           │
+ │           ├─ Dashboard ··· LEE: (solo datos mock) — sin estado propio relevante
+ │           │
+ │           ├─ Catalog ····· LOCAL: search, category, myList, calcProduct, salePrice
+ │           │                GLOBAL: ninguno (autosuficiente con mock data)
+ │           │
+ │           ├─ MyList ······ LOCAL: listIds[]
+ │           │                GLOBAL: ninguno
+ │           │
+ │           ├─ Brand ······· LOCAL: brandName, brandAddress, showToast
+ │           │                GLOBAL ESCRIBE: UPDATE_BRAND
+ │           │
+ │           ├─ Orders ······ LEE: (solo datos mock) — presentacional
+ │           │
+ │           ├─ Shipping ···· LOCAL: step, selectedProduct, schedule, buyerData, submitted
+ │           │                GLOBAL LEE: user.brand (vista previa etiqueta)
+ │           │
+ │           ├─ Inventory ··· LEE: (solo datos mock) — presentacional
+ │           │
+ │           ├─ Picking ····· LOCAL: completedIds[]
+ │           │                GLOBAL LEE: user.brand.name (etiqueta)
+ │           │
+ │           └─ Wallet ······ LOCAL: selectedAmount, showToast
+ │                            GLOBAL LEE + ESCRIBE: wallet.balance (UPDATE_WALLET)</code></pre>
+
+  <h2>6.5 Patrón Reducer — Acciones y Transiciones</h2>
+  <p>El reducer sigue el patrón <strong>Flux/Redux unidireccional</strong> sin librería externa:</p>
+  <pre><code>┌──────────────────────────────────────────────────────────────────┐
+│                        appReducer                                │
+│                                                                  │
+│  action.type              │  Mutación                            │
+│  ─────────────────────────┼──────────────────────────────────    │
+│  TOGGLE_THEME             │  theme: 'light' ↔ 'dark'            │
+│  TOGGLE_SIDEBAR           │  sidebarOpen: true ↔ false           │
+│  UPDATE_BRAND             │  user.brand = { ...brand, ...payload }│
+│  UPDATE_WALLET            │  wallet = { ...wallet, ...payload }   │
+│  CLEAR_NOTIFICATIONS      │  notifications: 0                    │
+│                                                                  │
+│  Invariante: SIEMPRE retorna nuevo objeto (inmutabilidad)        │
+│  Invariante: default → retorna state sin cambios                 │
+└──────────────────────────────────────────────────────────────────┘</code></pre>
+
+  <h3>Garantías de inmutabilidad</h3>
+  <pre><code>// Cada case usa spread operator para crear nuevo objeto
+case 'UPDATE_BRAND':
+  return {
+    ...state,                              // copia nivel 1
+    user: {
+      ...state.user,                       // copia nivel 2
+      brand: { ...state.user.brand, ...action.payload }  // copia nivel 3 + merge
+    }
+  }
+// React detecta nueva referencia → re-render → UI actualizada</code></pre>
+
+  <h2>6.6 Justificación de la Separación Global vs Local</h2>
+  <table>
+    <thead>
+      <tr><th>Estado</th><th>Tipo</th><th>Justificación</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>theme</code></td><td><strong>Global</strong></td><td>Layout, Header y TODOS los componentes lo consumen vía CSS vars</td></tr>
+      <tr><td><code>sidebarOpen</code></td><td><strong>Global</strong></td><td>Layout y Header interactúan con él desde diferentes posiciones del DOM</td></tr>
+      <tr><td><code>wallet.balance</code></td><td><strong>Global</strong></td><td>Header lo muestra, Wallet lo modifica, Shipping lo valida</td></tr>
+      <tr><td><code>user.brand</code></td><td><strong>Global</strong></td><td>Brand lo edita, Picking/Shipping lo leen para etiquetas</td></tr>
+      <tr><td><code>notifications</code></td><td><strong>Global</strong></td><td>Header badge lo muestra, varias vistas potencialmente lo incrementan</td></tr>
+      <tr><td><code>search</code> (catálogo)</td><td><strong>Local</strong></td><td>Solo Catalog.jsx lo usa; se reinicia al salir de la vista</td></tr>
+      <tr><td><code>step</code> (envío)</td><td><strong>Local</strong></td><td>Solo Shipping.jsx lo usa; el wizard se reinicia al navegar</td></tr>
+      <tr><td><code>completedIds</code></td><td><strong>Local</strong></td><td>Efímero de sesión; en producción vendría del backend</td></tr>
+      <tr><td><code>selectedAmount</code></td><td><strong>Local</strong></td><td>Selección temporal antes de confirmar; no necesita persistir</td></tr>
+    </tbody>
+  </table>
+
+  <div class="highlight-box">
+    <strong>Principio aplicado:</strong> <em>"Levantar el estado solo cuando sea necesario"</em> (React docs — Lifting State Up). Si solo un componente lo usa → <code>useState</code>. Si múltiples componentes en diferentes rutas lo necesitan → Context.
+  </div>
+
+  <h2>6.7 Evolución Arquitectónica Planificada</h2>
+  <table>
+    <thead>
+      <tr><th></th><th>MVP (actual)</th><th>Crecimiento</th><th>Enterprise</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>Datos</strong></td><td>Mock (mockData.js)</td><td>API REST + React Query</td><td>GraphQL + Cache</td></tr>
+      <tr><td><strong>Estado UI</strong></td><td>Context + useReducer</td><td>Context + useReducer</td><td>Zustand (selectores)</td></tr>
+      <tr><td><strong>Estado servidor</strong></td><td>N/A</td><td>React Query</td><td>React Query + SSR</td></tr>
+      <tr><td><strong>Autenticación</strong></td><td>Mock user</td><td>Firebase Auth</td><td>Auth0 / Keycloak</td></tr>
+      <tr><td><strong>Routing</strong></td><td>React Router</td><td>+ lazy() + Suspense</td><td>+ loader/action pattern</td></tr>
+      <tr><td><strong>Persistencia</strong></td><td>N/A</td><td>localStorage + sync</td><td>IndexedDB + SW</td></tr>
+    </tbody>
+  </table>
+  <p>La arquitectura actual <strong>no tiene deuda técnica</strong>: cada capa se puede reemplazar independientemente porque no hay acoplamiento entre el estado global y la capa de datos.</p>
+</div>
+
+<!-- ================================================================
+     SECCIÓN 7 — STACK TECNOLÓGICO
+     ================================================================ -->
+<div class="section" id="s7">
+  <h1>7. Stack Tecnológico</h1>
+  <table>
+    <thead>
+      <tr><th>Herramienta</th><th>Versión</th><th>Uso</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>React</strong></td><td>19</td><td>UI Library — componentes funcionales con hooks</td></tr>
+      <tr><td><strong>Vite</strong></td><td>8</td><td>Build tool + HMR instantáneo</td></tr>
+      <tr><td><strong>React Router DOM</strong></td><td>7</td><td>Routing SPA declarativo</td></tr>
+      <tr><td><strong>Lucide React</strong></td><td>0.470+</td><td>Iconografía SVG consistente</td></tr>
+      <tr><td><strong>CSS Custom Properties</strong></td><td>—</td><td>Design token system + dark mode</td></tr>
+      <tr><td><strong>Context API + useReducer</strong></td><td>—</td><td>Estado global ligero (nativo React)</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ================================================================
+     SECCIÓN 8 — ESTRUCTURA DEL PROYECTO
+     ================================================================ -->
+<div class="section" id="s8">
+  <h1>8. Estructura del Proyecto</h1>
+  <pre><code>dropship-app/
+├── public/
+├── src/
+│   ├── components/
+│   │   └── Layout/              # Sidebar + Header + Outlet
+│   ├── context/
+│   │   └── AppContext.jsx       # Estado global (tema, usuario, billetera)
+│   ├── data/
+│   │   └── mockData.js          # Datos de mock (productos, órdenes, etc.)
+│   ├── pages/
+│   │   ├── Dashboard/           # KPIs + Pedidos recientes + Actividad
+│   │   ├── Catalog/             # Catálogo sourcing + Calculadora
+│   │   ├── MyList/              # Productos del vendedor
+│   │   ├── Brand/               # Personalización marca blanca
+│   │   ├── Orders/              # Gestión de pedidos
+│   │   ├── Shipping/            # Wizard nuevo envío
+│   │   ├── Inventory/           # Inventario + Picking
+│   │   └── Wallet/              # Billetera virtual
+│   ├── styles/
+│   │   └── global.css           # Tokens + Reset + Dark mode
+│   ├── utils/
+│   │   └── helpers.js           # Formateo moneda, fecha, classNames
+│   ├── App.jsx                  # Router principal
+│   └── main.jsx                 # Entry point
+└── package.json</code></pre>
+</div>
+
+<!-- ================================================================
+     SECCIÓN 9 — CÓMO EJECUTAR
+     ================================================================ -->
+<div class="section" id="s9">
+  <h1>9. Cómo Ejecutar</h1>
+  <pre><code>cd dropship-app
+npm install
+npm run dev</code></pre>
+  <p>La aplicación estará disponible en <code>http://localhost:5173</code>.</p>
+</div>
+
+<!-- ================================================================
+     SECCIÓN 10 — FLUJO LÓGICO DEL PROCESO
+     ================================================================ -->
+<div class="section" id="s10">
+  <h1>10. Flujo Lógico del Proceso</h1>
+  <ol>
+    <li><strong>Selección:</strong> El vendedor elige un producto del catálogo sourcing, evaluando márgenes con la calculadora integrada.</li>
+    <li><strong>Importación:</strong> Lo agrega a "Mi Lista" con precio personalizado bajo su marca.</li>
+    <li><strong>Venta:</strong> Vende externamente (redes sociales, marketplace) y registra la orden en "Nuevo Envío" con datos del comprador.</li>
+    <li><strong>Logística:</strong> La bodega recibe la orden, imprime etiqueta con marca del vendedor (white label) y empaca el pedido.</li>
+    <li><strong>Notificación:</strong> El sistema genera guía de seguimiento para el comprador final. El vendedor visualiza el estado en tiempo real.</li>
+  </ol>
+
+  <pre><code>  Vendedor                   Plataforma                    Bodega
+  ────────                   ──────────                    ──────
+  Explora catálogo    ──→    Muestra productos + márgenes
+  Agrega a Mi Lista   ──→    Registra con marca propia
+  Vende por IG/TikTok
+  Crea "Nuevo Envío"  ──→    Valida saldo billetera
+                             Genera orden + etiqueta white label  ──→  Recibe picking
+                                                                       Empaca con marca
+                                                                       Despacha  ──→  Comprador
+  Ve tracking en       ←──   Actualiza estado pedido       ←──  Confirma envío
+  "Mis Pedidos"</code></pre>
+</div>
+
+</body>
+</html>
