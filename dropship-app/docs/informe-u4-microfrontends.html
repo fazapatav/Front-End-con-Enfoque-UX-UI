@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DropShip Pro — Entrega 3 Unidad 4 | Microfrontends</title>
+  <style>
+    @page { size: letter; margin: 2.2cm 2cm 2.2cm 2cm; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Times New Roman', Times, serif; font-size: 12pt; line-height: 1.4; color: #1a1a1a; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+    .cover { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; page-break-after: always; break-after: page; }
+    .cover__emoji { font-size: 48pt; margin-bottom: 0.5rem; }
+    .cover__title { font-size: 26pt; font-weight: bold; color: #1a4480; margin-bottom: 0.3em; }
+    .cover__subtitle { font-size: 14pt; color: #444; margin-bottom: 2rem; }
+    .cover__rule { width: 100px; height: 3px; background: #1a4480; margin: 1.5rem auto; }
+    .cover__meta { font-size: 12pt; line-height: 2; color: #333; }
+    .cover__meta strong { color: #1a1a1a; }
+
+    .toc { page-break-after: always; break-after: page; padding-top: 1rem; }
+    .toc h2 { font-size: 16pt; color: #1a4480; border-bottom: 2px solid #1a4480; padding-bottom: 0.3rem; margin-bottom: 1rem; }
+    .toc ol { list-style: none; padding: 0; }
+    .toc li { padding: 0.35rem 0; border-bottom: 1px dotted #ccc; }
+    .toc li a { color: #1a1a1a; text-decoration: none; }
+    .toc__sub { padding-left: 2rem; font-size: 11pt; color: #555; }
+    .toc__num { display: inline-block; width: 2.2rem; font-weight: bold; color: #1a4480; }
+
+    h1 { font-size: 18pt; font-weight: bold; color: #1a4480; margin-top: 0; margin-bottom: 0.8rem; page-break-after: avoid; break-after: avoid; }
+    h2 { font-size: 14pt; font-weight: bold; color: #1a1a1a; margin-top: 1.5rem; margin-bottom: 0.5rem; border-bottom: 1.5px solid #ccc; padding-bottom: 0.2rem; page-break-after: avoid; break-after: avoid; }
+    h3 { font-size: 12pt; font-weight: bold; color: #333; margin-top: 1.2rem; margin-bottom: 0.4rem; page-break-after: avoid; break-after: avoid; }
+
+    p { margin-bottom: 0.6em; text-align: justify; }
+    ul, ol { margin: 0.4em 0 0.7em 1.8em; }
+    li { margin-bottom: 0.2em; }
+    strong { font-weight: bold; }
+    em { font-style: italic; color: #444; }
+    blockquote { border-left: 3px solid #1a4480; padding: 0.5rem 1rem; margin: 0.8rem 0; background: #f4f8ff; font-style: italic; font-size: 11pt; page-break-inside: avoid; break-inside: avoid; }
+
+    table { width: 100%; border-collapse: collapse; margin: 0.7rem 0 1rem; font-size: 11pt; page-break-inside: avoid; break-inside: avoid; }
+    thead th { background: #1a4480; color: #fff; font-weight: bold; text-align: left; padding: 0.45rem 0.6rem; border: 1px solid #1a4480; font-size: 10.5pt; }
+    tbody td { padding: 0.35rem 0.6rem; border: 1px solid #bbb; vertical-align: top; }
+    tbody tr:nth-child(even) { background: #f5f8ff; }
+
+    pre { background: #0f172a; color: #e2e8f0; padding: 0.9rem 1rem; border-radius: 4px; font-family: 'Courier New', Courier, monospace; font-size: 9pt; line-height: 1.5; margin: 0.6rem 0 1rem; page-break-inside: avoid; break-inside: avoid; white-space: pre; }
+    code { font-family: 'Courier New', Courier, monospace; font-size: 10.5pt; background: #eef2ff; color: #1a4480; padding: 0.05em 0.3em; border-radius: 2px; }
+    pre code { background: transparent; color: inherit; padding: 0; font-size: inherit; }
+
+    .section { margin-top: 0.5rem; }
+    .section-page { page-break-before: always; break-before: page; }
+    hr { border: none; border-top: 1px solid #ddd; margin: 1.2rem 0; }
+
+    .box-info { background: #eef6ff; border: 1px solid #90c2f5; border-radius: 4px; padding: 0.7rem 1rem; margin: 0.7rem 0; font-size: 11pt; page-break-inside: avoid; break-inside: avoid; }
+    .box-warn { background: #fffbeb; border: 1px solid #f6d860; border-radius: 4px; padding: 0.7rem 1rem; margin: 0.7rem 0; font-size: 11pt; page-break-inside: avoid; break-inside: avoid; }
+    .box-success { background: #f0fff4; border-left: 4px solid #22c55e; padding: 0.6rem 1rem; margin: 0.7rem 0; font-size: 11pt; page-break-inside: avoid; break-inside: avoid; }
+    .box-title { font-weight: bold; font-size: 10pt; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 0.3rem; color: #1a4480; }
+
+    @media print { body { font-size: 11pt; } pre { font-size: 8.5pt; } table { font-size: 10pt; } a { color: #1a1a1a; text-decoration: none; } }
+  </style>
+</head>
+<body>
+
+<!-- ===== PORTADA ===== -->
+<div class="cover">
+  <div class="cover__emoji">🏗️</div>
+  <div class="cover__title">DropShip Pro</div>
+  <div class="cover__subtitle">Evolución Arquitectónica del Front-End<br>hacia un Modelo de Microfrontends</div>
+  <div class="cover__rule"></div>
+  <div class="cover__meta">
+    <strong>Módulo:</strong> Arquitectura Front-End<br>
+    <strong>Unidad:</strong> 4 — Entrega 3 (Actividad Formativa)<br>
+    <strong>Tecnología:</strong> React 19 + Vite 8 + Client-Side Composition<br>
+    <strong>Repositorio:</strong> <em>[URL del repositorio]</em><br>
+    <strong>Video demo:</strong> <em>[URL del video]</em><br>
+    <strong>Fecha:</strong> Abril 2026
+  </div>
+</div>
+
+<!-- ===== TABLA DE CONTENIDOS ===== -->
+<div class="toc">
+  <h2>Tabla de Contenidos</h2>
+  <ol>
+    <li><a href="#s1"><span class="toc__num">1.</span> Introducción: Evolución desde las entregas previas</a></li>
+    <li><a href="#s2"><span class="toc__num">2.</span> Justificación Estratégica de Microfrontends</a>
+      <div class="toc__sub">2.1 Crecimiento organizacional hipotético · 2.2 Limitaciones del monolito · 2.3 Por qué microfrontends · 2.4 Comparativa de enfoques</div>
+    </li>
+    <li><a href="#s3"><span class="toc__num">3.</span> Definición de Dominios Funcionales</a>
+      <div class="toc__sub">3.1 Criterios de delimitación · 3.2 Los cuatro dominios · 3.3 Shell orquestador · 3.4 Diagrama de dominios</div>
+    </li>
+    <li><a href="#s4"><span class="toc__num">4.</span> Estrategia de Integración</a>
+      <div class="toc__sub">4.1 Comparativa cliente vs servidor vs iframe · 4.2 Integración client-side elegida · 4.3 Event Bus como contrato cross-MFE · 4.4 Estado compartido</div>
+    </li>
+    <li><a href="#s5"><span class="toc__num">5.</span> Prototipo Funcional y Evidencia Técnica</a>
+      <div class="toc__sub">5.1 Estructura de archivos · 5.2 Chunks independientes generados · 5.3 Fragmentos de código clave · 5.4 Repositorio y video</div>
+    </li>
+    <li><a href="#s6"><span class="toc__num">6.</span> Reflexión Crítica y Decisiones Tomadas</a></li>
+  </ol>
+</div>
+
+<!-- ===== SECCIÓN 1 ===== -->
+<div class="section" id="s1">
+  <h1>1. Introducción: Evolución desde las Entregas Previas</h1>
+
+  <p>Las entregas anteriores de este módulo establecieron una base arquitectónica sólida para <strong>DropShip Pro</strong>: la Entrega 1 definió el diseño UX/UI y la justificación del framework React; la Entrega 2 formalizó el patrón Flux con capas explícitas de Actions, Dispatcher y Store. Ambas entregas construyeron un monolito SPA funcional, coherente y bien estructurado.</p>
+
+  <p>La Entrega 3 representa una ruptura conceptual: la evolución del monolito hacia una <strong>arquitectura de microfrontends</strong>. Esta transición no implica reescribir el código existente, sino reorganizar sus responsabilidades en dominios independientes, con capacidad de despliegue autónomo y equipos propietarios claramente definidos.</p>
+
+  <p>El ejercicio evidencia que la arquitectura de software no es un estado estático, sino un proceso de toma de decisiones continuo, donde cada evolución responde a presiones organizacionales, técnicas y de negocio concretas.</p>
+</div>
+
+<!-- ===== SECCIÓN 2 ===== -->
+<div class="section-page" id="s2">
+  <h1>2. Justificación Estratégica de Microfrontends</h1>
+
+  <h2>2.1 Crecimiento Organizacional Hipotético</h2>
+  <p>Asumamos que DropShip Pro alcanzó tracción en el mercado latinoamericano y debe escalar. La organización evoluciona de un equipo de 3 personas a cuatro squads especializados:</p>
+
+  <table>
+    <thead><tr><th>Squad</th><th>Dominio de negocio</th><th>Equipo</th><th>Cadencia de despliegue</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Squad Vendedor</strong></td><td>Catálogo, marca blanca, métricas</td><td>3 devs + 1 UX</td><td>2 veces/semana</td></tr>
+      <tr><td><strong>Squad Pedidos</strong></td><td>Creación y seguimiento de envíos</td><td>4 devs + 1 QA</td><td>Diario</td></tr>
+      <tr><td><strong>Squad Bodega</strong></td><td>Inventario, picking, fulfillment</td><td>2 devs + 1 ops</td><td>1 vez/semana</td></tr>
+      <tr><td><strong>Squad Finanzas</strong></td><td>Billetera, transacciones, conciliación</td><td>3 devs + 1 auditor</td><td>Mensual (regulado)</td></tr>
+    </tbody>
+  </table>
+
+  <p>Con cuatro squads de cadencias distintas, un monolito SPA se convierte en un <strong>cuello de botella organizacional</strong>: el Squad Pedidos no puede desplegar su módulo de envíos sin esperar que el Squad Finanzas apruebe sus cambios mensuales, y viceversa.</p>
+
+  <h2>2.2 Limitaciones del Monolito SPA (Identificadas en la Entrega Anterior)</h2>
+
+  <table>
+    <thead><tr><th>Limitación</th><th>Manifestación concreta en DropShip Pro</th><th>Impacto</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Acoplamiento de despliegue</strong></td><td>Un bug en Wallet.jsx bloquea el deploy de Catalog.jsx</td><td>Alto — frena a squads independientes</td></tr>
+      <tr><td><strong>Propiedad difusa del código</strong></td><td>Cualquier squad puede modificar App.jsx y afectar el routing global</td><td>Alto — conflictos de merge frecuentes</td></tr>
+      <tr><td><strong>Bundle único</strong></td><td>278 KB se descargan aunque el usuario solo use Billetera</td><td>Medio — impacto en performance inicial</td></tr>
+      <tr><td><strong>Incompatibilidad de versiones</strong></td><td>Si Finanzas requiere React 20 y Pedidos requiere React 19, el monolito no puede coexistir</td><td>Alto — frena la adopción de nuevas versiones</td></tr>
+      <tr><td><strong>Riesgo de pruebas</strong></td><td>Un cambio en el estado global (AppContext) puede romper cualquiera de los 9 módulos</td><td>Alto — test suite crece de forma proporcional</td></tr>
+    </tbody>
+  </table>
+
+  <h2>2.3 Por qué Microfrontends — Visión Arquitectónica</h2>
+  <p>Los microfrontends no son una solución técnica, son una <strong>respuesta organizacional</strong>. Permiten que la estructura del software refleje la estructura del equipo (Ley de Conway inversa). Cada squad es propietario de su MFE: decide su tecnología, su ritmo de despliegue y su estrategia de testing, dentro del contrato de integración definido por el Shell.</p>
+
+  <div class="box-success">
+    <strong>Principio rector:</strong> "La arquitectura de un sistema debe reflejar la estructura organizacional del equipo que lo construye y mantiene." — Conway, 1967 (aplicación inversa: diseñar la arquitectura para habilitar la estructura de equipo deseada).
+  </div>
+
+  <h2>2.4 Comparativa: Monolito vs Microfrontends</h2>
+  <table>
+    <thead><tr><th>Dimensión</th><th>Monolito SPA (Entregas 1 y 2)</th><th>Microfrontends (Entrega 3)</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Despliegue</strong></td><td>Todo o nada — un cambio requiere redeployar toda la app</td><td>Por dominio — Finanzas puede deployar sin afectar Pedidos</td></tr>
+      <tr><td><strong>Ownership</strong></td><td>Compartido — cualquier squad modifica cualquier archivo</td><td>Por squad — cada MFE tiene un equipo propietario</td></tr>
+      <tr><td><strong>Tecnología</strong></td><td>React 19 en todo el proyecto obligatoriamente</td><td>Cada MFE elige su framework (React, Vue, Svelte…)</td></tr>
+      <tr><td><strong>Carga inicial</strong></td><td>Bundle único de 278 KB siempre descargado</td><td>Solo el Shell + el MFE activo; resto se carga bajo demanda</td></tr>
+      <tr><td><strong>Fallo aislado</strong></td><td>Un error en un módulo puede colapsar toda la SPA</td><td>ErrorBoundary por MFE — el resto sigue funcionando</td></tr>
+      <tr><td><strong>Escalabilidad de equipos</strong></td><td>Fricciones crecientes con más de 5 devs en el mismo repo</td><td>Lineal — agregar un squad = agregar un MFE</td></tr>
+      <tr><td><strong>Complejidad de integración</strong></td><td>Baja — componentes se importan directamente</td><td>Mayor — requiere contrato de eventos y estado compartido definido</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ===== SECCIÓN 3 ===== -->
+<div class="section-page" id="s3">
+  <h1>3. Definición de Dominios Funcionales</h1>
+
+  <h2>3.1 Criterios de Delimitación</h2>
+  <p>Los dominios se definieron aplicando los principios de <strong>Domain-Driven Design (DDD)</strong>: cada dominio debe tener un lenguaje ubicuo propio, datos que controla exclusivamente, y capacidades que no dependen de otros dominios para funcionar:</p>
+  <ul>
+    <li><strong>Alta cohesión interna:</strong> Las páginas de un mismo dominio comparten datos y flujos de negocio naturales.</li>
+    <li><strong>Bajo acoplamiento externo:</strong> La comunicación entre dominios ocurre solo a través del Event Bus; nunca mediante imports directos entre MFEs.</li>
+    <li><strong>Autonomía de despliegue:</strong> Un dominio puede cambiar sin que otros se vean afectados, siempre que respete el contrato de eventos.</li>
+    <li><strong>Propietario único:</strong> Un solo squad es responsable de cada dominio.</li>
+  </ul>
+
+  <h2>3.2 Los Cuatro Dominios de DropShip Pro</h2>
+
+  <table>
+    <thead><tr><th>MFE</th><th>Dominio de negocio</th><th>Páginas incluidas</th><th>Puerto hipotético</th><th>Squad</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><strong>VendorMFE</strong></td>
+        <td>Gestión de Oferta del Vendedor</td>
+        <td>Dashboard, Catálogo, Mi Lista, Mi Marca</td>
+        <td>5174</td>
+        <td>Squad Vendedor</td>
+      </tr>
+      <tr>
+        <td><strong>OrdersMFE</strong></td>
+        <td>Gestión del Ciclo de Vida de Pedidos</td>
+        <td>Mis Pedidos, Nuevo Envío</td>
+        <td>5175</td>
+        <td>Squad Pedidos</td>
+      </tr>
+      <tr>
+        <td><strong>WarehouseMFE</strong></td>
+        <td>Operaciones de Bodega y Fulfillment</td>
+        <td>Inventario, Picking &amp; Packing</td>
+        <td>5176</td>
+        <td>Squad Bodega</td>
+      </tr>
+      <tr>
+        <td><strong>WalletMFE</strong></td>
+        <td>Gestión Financiera y Billetera Virtual</td>
+        <td>Billetera Virtual</td>
+        <td>5177</td>
+        <td>Squad Finanzas</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>3.3 Shell Orquestador</h2>
+  <p>El <strong>Shell</strong> (<code>App.jsx</code> + <code>Layout.jsx</code>) no es un MFE: es la aplicación contenedora que gestiona:</p>
+  <ul>
+    <li>Routing global y navegación (sidebar, header)</li>
+    <li>Estado compartido mínimo a través de <code>AppContext</code> (tema, saldo visible, marca)</li>
+    <li>Carga dinámica de cada MFE según la ruta activa</li>
+    <li>Fallbacks visuales (<code>MFELoader</code>) mientras el bundle del MFE se descarga</li>
+  </ul>
+
+  <h2>3.4 Diagrama de Dominios y Comunicación</h2>
+  <pre><code>┌─────────────────────────────────────────────────────────────────────────┐
+│                        SHELL (puerto 5173)                              │
+│  App.jsx + Layout.jsx + AppContext                                       │
+│                                                                         │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐  ┌────────────┐  │
+│  │  VendorMFE   │  │  OrdersMFE   │  │ WarehouseMFE │  │  WalletMFE │  │
+│  │  :5174       │  │  :5175       │  │  :5176       │  │  :5177     │  │
+│  │              │  │              │  │              │  │            │  │
+│  │ Dashboard    │  │ Mis Pedidos  │  │ Inventario   │  │ Billetera  │  │
+│  │ Catálogo     │  │ Nuevo Envío  │  │ Picking      │  │            │  │
+│  │ Mi Lista     │  │              │  │              │  │            │  │
+│  │ Mi Marca     │  │              │  │              │  │            │  │
+│  └──────┬───────┘  └──────┬───────┘  └──────┬───────┘  └─────┬──────┘  │
+│         │                │                 │                  │         │
+│         └────────────────┴─────────────────┴──────────────────┘         │
+│                              Event Bus (window CustomEvent)              │
+│                                                                         │
+│  Eventos:                                                               │
+│   mfe:catalog:product-added   (VendorMFE → OrdersMFE)                  │
+│   mfe:order:created           (OrdersMFE → WarehouseMFE)               │
+│   mfe:wallet:balance-updated  (WalletMFE → Shell)                      │
+│   mfe:brand:updated           (VendorMFE → Shell)                      │
+└─────────────────────────────────────────────────────────────────────────┘</code></pre>
+</div>
+
+<!-- ===== SECCIÓN 4 ===== -->
+<div class="section-page" id="s4">
+  <h1>4. Estrategia de Integración</h1>
+
+  <h2>4.1 Comparativa: Cliente vs Servidor vs Iframe</h2>
+
+  <table>
+    <thead><tr><th>Criterio</th><th>Client-Side ✓</th><th>Server-Side (SSR)</th><th>iFrame</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><strong>Composición</strong></td>
+        <td>En el navegador vía <code>React.lazy()</code> + <code>Suspense</code></td>
+        <td>En el servidor antes de entregar el HTML</td>
+        <td>Cada MFE en un iframe independiente</td>
+      </tr>
+      <tr>
+        <td><strong>Comunicación cross-MFE</strong></td>
+        <td><strong>Event Bus nativo</strong> (CustomEvent en window)</td>
+        <td>Props/contexto del servidor — más complejo</td>
+        <td>postMessage — verbose, limitado</td>
+      </tr>
+      <tr>
+        <td><strong>Aislamiento CSS</strong></td>
+        <td>Parcial — CSS puede filtrarse entre MFEs</td>
+        <td>Parcial</td>
+        <td>Total — cada iframe tiene su propio CSSOM</td>
+      </tr>
+      <tr>
+        <td><strong>Performance</strong></td>
+        <td>Buena — lazy loading por MFE activo</td>
+        <td>Excelente — HTML pre-renderizado</td>
+        <td>Mala — overhead de cada contexto de navegación</td>
+      </tr>
+      <tr>
+        <td><strong>Estado compartido</strong></td>
+        <td>Context de React + Event Bus</td>
+        <td>Cookies / server state</td>
+        <td>Muy limitado (postMessage)</td>
+      </tr>
+      <tr>
+        <td><strong>Adecuado para SPA React</strong></td>
+        <td><strong>✅ Sí — patrón nativo</strong></td>
+        <td>⚠️ Requiere Next.js / SSR runtime</td>
+        <td>❌ Rompe la experiencia de SPA</td>
+      </tr>
+      <tr>
+        <td><strong>Complejidad de implementación</strong></td>
+        <td>Baja — React.lazy() + Module Federation</td>
+        <td>Alta — servidor adicional, streaming</td>
+        <td>Media — gestión de tamaños y comunicación</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>4.2 Estrategia Seleccionada: Composición Client-Side</h2>
+  <p>Se seleccionó la <strong>composición en el cliente</strong> como estrategia de integración porque permite que cada MFE sea descargado de forma independiente en el navegador solo cuando el usuario lo necesita. Esto significa que cuando un usuario navega a la sección de Billetera, el navegador descarga únicamente el código de WalletMFE en ese momento; mientras tanto, los bundles de OrdersMFE, VendorMFE y WarehouseMFE permanecen dormidos en el servidor, listos para ser utilizados si el usuario navega hacia ellos. Esta aproximación client-side evita la necesidad de infraestructura adicional de servidor SSR (Server-Side Rendering), aprovechando que la aplicación ya es una SPA React madura.</p>
+  
+  <p>La independencia de despliegue es el beneficio más directo de esta estrategia. Cada squad puede desarrollar su MFE en su propio repositorio, testear de forma aislada, y desplegarlo en su propio servidor o CDN sin necesidad de coordinar con otros equipos. El Shell actúa como un "orquestador neutral" que sabe dónde encontrar cada MFE en tiempo de ejecución y se encarga de cargarlo cuando sea necesario. Esta separación física de los artefactos (cada MFE es un bundle JavaScript independiente) refleja directamente la separación lógica de responsabilidades entre dominios de negocio.</p>
+  
+  <p>El contrato de integración entre MFEs es deliberadamente minimalista: consiste únicamente en el Event Bus (un mecanismo de eventos publish/subscribe implementado en JavaScript nativo) y el estado compartido del Shell (datos como el tema visual, el saldo visible de la billetera, y la marca del vendedor). Esta claridad contractual elimina la ambigüedad operacional: cualquier comunicación entre dominios debe ocurrir a través de estos dos canales documentados y versionados. No hay importes directos entre MFEs, no hay dependencias ocultas, no hay sorpresas en el momento del despliegue.</p>
+
+  <h2>4.3 Event Bus como Contrato Cross-MFE</h2>
+  <p>El Event Bus (<code>src/utils/eventBus.js</code>) es el único mecanismo de comunicación entre dominios. Implementa el patrón Publish/Subscribe sobre la API nativa del navegador (<code>window.CustomEvent</code>):</p>
+
+  <pre><code>// src/utils/eventBus.js — Contrato de eventos entre MFEs
+
+export const EVENTS = {
+  WALLET_BALANCE_UPDATED: "mfe:wallet:balance-updated",   // Wallet → Shell
+  CATALOG_PRODUCT_ADDED:  "mfe:catalog:product-added",    // Vendor → Orders
+  ORDER_CREATED:          "mfe:order:created",             // Orders → Warehouse
+  BRAND_UPDATED:          "mfe:brand:updated",             // Vendor → Shell
+};
+
+export const eventBus = {
+  emit(event, data) {
+    window.dispatchEvent(new CustomEvent(event, { detail: data }));
+  },
+  on(event, handler) {
+    window.addEventListener(event, handler);
+    return () =&gt; window.removeEventListener(event, handler); // cleanup
+  },
+};</code></pre>
+
+  <p><strong>Flujo de comunicación implementado (WalletMFE → Shell):</strong></p>
+  <pre><code>// WalletMFE (src/pages/Wallet/Wallet.jsx) — EMISOR
+const handleRecharge = () => {
+  const newBalance = state.wallet.balance + selectedAmount;
+  dispatch(updateWallet({ balance: newBalance }));
+  // MFE Finanzas notifica al Shell del nuevo saldo
+  eventBus.emit(EVENTS.WALLET_BALANCE_UPDATED, { balance: newBalance });
+};
+
+// Shell (src/components/Layout/Layout.jsx) — RECEPTOR
+useEffect(() => {
+  const unsub = eventBus.on(EVENTS.WALLET_BALANCE_UPDATED, () => {
+    setWalletPulse(true);             // pulsa el chip de saldo en el header
+    setTimeout(() => setWalletPulse(false), 1500);
+  });
+  return unsub;                        // cleanup al desmontar
+}, []);</code></pre>
+
+  <h2>4.4 Estado Compartido — Criterios de Gobernanza</h2>
+  <p>Se definieron dos zonas de estado con reglas estrictas de acceso:</p>
+
+  <table>
+    <thead><tr><th>Zona</th><th>Mecanismo</th><th>Quién puede leer</th><th>Quién puede escribir</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Estado Shell</strong></td><td>AppContext (theme, sidebarOpen, brand, wallet.balance, notifications)</td><td>Todos los MFEs vía <code>useApp()</code></td><td>Solo el MFE propietario vía Action Creator</td></tr>
+      <tr><td><strong>Estado local MFE</strong></td><td>useState dentro del MFE</td><td>Solo el MFE propietario</td><td>Solo el MFE propietario</td></tr>
+      <tr><td><strong>Comunicación directa</strong></td><td>Event Bus</td><td>Cualquier MFE suscrito</td><td>El MFE que emite el evento</td></tr>
+      <tr><td><strong>Importación cruzada</strong></td><td><strong>Prohibida</strong></td><td>—</td><td>—</td></tr>
+    </tbody>
+  </table>
+
+  <div class="box-warn">
+    <div class="box-title">⚠️ Regla de gobernanza crítica</div>
+    <p>Ningún MFE puede importar directamente código de otro MFE. Ejemplo prohibido: <code>import Wallet from '../wallet/Wallet.jsx'</code> desde OrdersMFE. La única comunicación permitida entre dominios es a través del Event Bus o el estado compartido del Shell.</p>
+  </div>
+</div>
+
+<!-- ===== SECCIÓN 5 ===== -->
+<div class="section-page" id="s5">
+  <h1>5. Prototipo Funcional y Evidencia Técnica</h1>
+
+  <h2>5.1 Estructura de Archivos Evolucionada</h2>
+  <pre><code>dropship-app/src/
+│
+├── mfe/                             ← NUEVO: Carpeta de dominios MFE
+│   ├── vendor/
+│   │   └── VendorMFE.jsx            ← Entry point MFE Vendedor
+│   ├── orders/
+│   │   └── OrdersMFE.jsx            ← Entry point MFE Pedidos
+│   ├── warehouse/
+│   │   └── WarehouseMFE.jsx         ← Entry point MFE Bodega
+│   └── wallet/
+│       └── WalletMFE.jsx            ← Entry point MFE Finanzas
+│
+├── components/
+│   ├── Layout/Layout.jsx            ← Shell UI (actualizado: EventBus listener)
+│   └── MFELoader/MFELoader.jsx      ← NUEVO: Fallback de carga por MFE
+│
+├── utils/
+│   ├── helpers.js                   ← existente
+│   └── eventBus.js                  ← NUEVO: Contrato cross-MFE
+│
+├── store/
+│   ├── actions.js                   ← existente (Action Creators)
+│   └── reducer.js                   ← existente (Estado + Reducer)
+│
+├── context/AppContext.jsx           ← existente (Dispatcher)
+├── pages/                           ← existente (sin cambios)
+└── App.jsx                          ← MODIFICADO: Shell con lazy loading</code></pre>
+
+  <h2>5.2 Chunks Independientes Generados en el Build</h2>
+  <p>La prueba más tangible de la arquitectura de microfrontends es el output del build. Vite genera chunks JavaScript independientes por cada MFE:</p>
+
+  <pre><code>dist/assets/VendorMFE-jTisce4A.js        1.38 kB  ← Bundle MFE Vendedor
+dist/assets/OrdersMFE-C2Y9-kFP.js         0.98 kB  ← Bundle MFE Pedidos
+dist/assets/WarehouseMFE-DmqRJJ0A.js      0.89 kB  ← Bundle MFE Bodega
+dist/assets/WalletMFE-BKplxPUS.js         0.71 kB  ← Bundle MFE Finanzas
+
+dist/assets/index-DTatXdsf.js           234.11 kB  ← Bundle Shell (compartido)
+
+✓ built in 3.20s — 0 errores</code></pre>
+
+  <p>Cada MFE se descarga <strong>únicamente cuando el usuario navega a su dominio</strong>. Un usuario que solo usa la Billetera descarga únicamente <code>WalletMFE.js</code> (0.71 KB), en lugar del bundle completo de 278 KB del monolito previo.</p>
+
+  <h2>5.3 Fragmentos de Código Clave</h2>
+
+  <h3>App.jsx — Shell con composición lazy de MFEs</h3>
+  <pre><code>// Shell: carga lazy por dominio — cada import es un chunk independiente
+const VendorMFE    = lazy(() => import("./mfe/vendor/VendorMFE"));
+const OrdersMFE    = lazy(() => import("./mfe/orders/OrdersMFE"));
+const WarehouseMFE = lazy(() => import("./mfe/warehouse/WarehouseMFE"));
+const WalletMFE    = lazy(() => import("./mfe/wallet/WalletMFE"));
+
+// En las rutas: cada Route tiene su propio Suspense boundary
+&lt;Route path="billetera" element={
+  &lt;Suspense fallback={&lt;MFELoader name="Finanzas" /&gt;}&gt;
+    &lt;WalletMFE /&gt;
+  &lt;/Suspense&gt;
+} /&gt;</code></pre>
+
+  <h3>VendorMFE.jsx — Entry point con rutas del dominio</h3>
+  <pre><code>// MFE Vendedor: orquesta sus propias rutas internas
+// En Module Federation real: exposes: { './VendorMFE': './src/mfe/vendor/VendorMFE.jsx' }
+export default function VendorMFE() {
+  return (
+    &lt;Suspense fallback={&lt;MFELoader name="Vendedor" /&gt;}&gt;
+      &lt;Routes&gt;
+        &lt;Route index element={&lt;Dashboard /&gt;} /&gt;
+        &lt;Route path="catalogo" element={&lt;Catalog /&gt;} /&gt;
+        &lt;Route path="mi-lista" element={&lt;MyList /&gt;} /&gt;
+        &lt;Route path="marca" element={&lt;Brand /&gt;} /&gt;
+      &lt;/Routes&gt;
+    &lt;/Suspense&gt;
+  );
+}</code></pre>
+
+  <h3>MFELoader.jsx — Fallback visual durante la carga del bundle remoto</h3>
+  <pre><code>// Se muestra mientras el bundle JS del MFE se descarga del servidor
+export default function MFELoader({ name = "módulo" }) {
+  return (
+    &lt;div style={{ display: "flex", flexDirection: "column",
+      alignItems: "center", justifyContent: "center", minHeight: 240 }}&gt;
+      &lt;div style={{ width: 36, height: 36,
+        border: "3px solid var(--color-border)",
+        borderTopColor: "var(--color-primary)",
+        borderRadius: "50%",
+        animation: "mfe-spin 0.8s linear infinite" }} /&gt;
+      &lt;span&gt;Cargando MFE &lt;strong&gt;{name}&lt;/strong&gt;…&lt;/span&gt;
+    &lt;/div&gt;
+  );
+}</code></pre>
+
+  <h2>5.4 Enlace al Repositorio y Video</h2>
+  <div class="box-info">
+    <div class="box-title">Acceso al Prototipo</div>
+    <p><strong>Repositorio GitHub:</strong> <em>[Insertar URL del repositorio]</em><br>
+    <strong>Video demostración:</strong> <em>[Insertar URL del video]</em><br>
+    <strong>Instrucciones de ejecución:</strong><br>
+    <code>cd dropship-app &amp;&amp; npm install &amp;&amp; npm run dev</code><br>
+    Disponible en <code>http://localhost:5173</code></p>
+  </div>
+</div>
+
+<!-- ===== SECCIÓN 6 ===== -->
+<div class="section-page" id="s6">
+  <h1>6. Reflexión Crítica y Decisiones Tomadas</h1>
+
+  <h2>6.1 Decisiones Arquitectónicas y su Justificación</h2>
+
+  <h3>Decisión 1: Simulación de Module Federation con React.lazy()</h3>
+  <p>Se optó por <code>React.lazy()</code> en lugar de configurar <code>@originjs/vite-plugin-federation</code> con múltiples servidores. La razón es pragmática: un prototipo académico demostrable debe funcionar con un único <code>npm run dev</code>. Sin embargo, el código está estructurado de forma que la migración a Module Federation real requiere únicamente cambiar las líneas de import, sin tocar la lógica de ningún MFE:</p>
+  <pre><code>// Ahora (simulado):
+const WalletMFE = lazy(() => import("./mfe/wallet/WalletMFE"));
+
+// En producción (Module Federation):
+const WalletMFE = lazy(() => import("wallet/WalletMFE"));</code></pre>
+  <p>Esta decisión refleja un principio fundamental: <em>la arquitectura debe ser demostrable en cada etapa</em>, incluso con aproximaciones de bajo costo técnico.</p>
+
+  <h3>Decisión 2: Event Bus sobre window.CustomEvent</h3>
+  <p>Se eligió <code>window.CustomEvent</code> en lugar de librerías como <code>mitt</code> o <code>EventEmitter3</code>. El razonamiento es de gobernanza: el Event Bus es el contrato más crítico de la arquitectura de microfrontends. Un mecanismo nativo del navegador garantiza que funciona independientemente del framework que use cada MFE en el futuro (Vue, Angular, Svelte), sin crear una dependencia compartida que podría generar conflictos de versiones.</p>
+
+  <h3>Decisión 3: Mantener AppContext como estado compartido del Shell</h3>
+  <p>Se decidió conservar el Context de React (Entrega 2) como mecanismo de estado compartido, en lugar de migrar a un sistema de estado externo al Shell. La justificación es que el estado compartido mínimo (tema, saldo visible, nombre de marca) es legítimamente responsabilidad del Shell — es UI compartida, no lógica de dominio. Cada MFE mantiene su estado de dominio de forma local y autónoma.</p>
+
+  <h2>6.2 Tensiones y Compromisos Identificados</h2>
+
+  <table>
+    <thead><tr><th>Tensión</th><th>Posición A</th><th>Posición B</th><th>Decisión tomada</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>Independencia total vs shared state</td>
+        <td>Cada MFE gestiona su propio estado 100% aislado</td>
+        <td>Shell comparte estado UI (tema, saldo visible)</td>
+        <td>Estado compartido mínimo en el Shell — necesario para coherencia visual</td>
+      </tr>
+      <tr>
+        <td>Múltiples servidores vs monorepo simulado</td>
+        <td>5 apps independientes, 5 puertos, CI/CD separados</td>
+        <td>Monorepo con simulación de boundaries</td>
+        <td>Monorepo simulado para el prototipo; roadmap incluye separación real</td>
+      </tr>
+      <tr>
+        <td>CSS global vs CSS aislado</td>
+        <td>Cada MFE con sus propios design tokens</td>
+        <td>Shell provee tokens globales compartidos</td>
+        <td>Shell provee tokens (global.css) — garantiza identidad visual coherente</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>6.3 Aprendizajes Alcanzados</h2>
+
+  <ol>
+    <li><strong>La arquitectura de software es un problema organizacional antes que técnico.</strong> La decisión de adoptar microfrontends no se justifica por razones puramente técnicas, sino porque la estructura de equipos de la organización lo requiere. Este es el aprendizaje más significativo de la Unidad 4.</li>
+    <li><strong>El contrato entre componentes es más importante que la implementación interna.</strong> El Event Bus y el estado compartido del Shell son los contratos de la arquitectura. La implementación interna de cada MFE puede cambiar libremente, siempre que respete esos contratos.</li>
+    <li><strong>La evolución arquitectónica debe ser incremental.</strong> Las tres entregas demostraron que una arquitectura madura no se construye de una vez: primero la UI (Entrega 1), luego los patrones de estado (Entrega 2), luego la descomposición en dominios (Entrega 3). Cada paso fue aditivo y no destructivo.</li>
+    <li><strong>La testabilidad mejora con los límites de dominio.</strong> Cada MFE puede testearse de forma completamente aislada — sus páginas no tienen dependencias de otros MFEs. El Event Bus puede mockearse trivialmente en los tests: <code>jest.spyOn(eventBus, 'emit')</code>.</li>
+  </ol>
+
+  <div class="box-success">
+    <strong>Conclusión estratégica:</strong> DropShip Pro ha evolucionado de un prototipo de interfaz (Entrega 1) a una arquitectura formalmente estructurada con patrones (Entrega 2) y finalmente a un modelo orientado a dominios de negocio independientes (Entrega 3). Esta trayectoria refleja el proceso real de maduración de una plataforma de software: las decisiones arquitectónicas se toman en respuesta a presiones reales, no de forma especulativa.
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,4 +1,5 @@
 import { NavLink, Outlet, useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
 import {
   LayoutDashboard,
   ShoppingBag,
@@ -69,6 +70,16 @@ export default function Layout() {
   const { state, dispatch } = useApp();
   const location = useLocation();
   const isDark = state.theme === "dark";
+  // Shell escucha el evento del MFE Finanzas para pulsar el chip de saldo
+  const [walletPulse, setWalletPulse] = useState(false);
+
+  useEffect(() => {
+    const unsub = eventBus.on(EVENTS.WALLET_BALANCE_UPDATED, () => {
+      setWalletPulse(true);
+      setTimeout(() => setWalletPulse(false), 1500);
+    });
+    return unsub; // cleanup al desmontar
+  }, []);
 
   const pageTitle = PAGE_TITLES[location.pathname] || "DropShip Pro";
 
@@ -136,7 +147,18 @@ export default function Layout() {
             <h1 className="header__title">{pageTitle}</h1>
           </div>
           <div className="header__right">
-            <div className="header__wallet">
+            <div
+              className="header__wallet"
+              style={
+                walletPulse
+                  ? {
+                      outline: "2px solid var(--color-secondary)",
+                      outlineOffset: 2,
+                    }
+                  : {}
+              }
+              title="MFE Finanzas: saldo actualizado"
+            >
               <Wallet size={16} />
               {formatCurrency(state.wallet.balance)}
             </div>

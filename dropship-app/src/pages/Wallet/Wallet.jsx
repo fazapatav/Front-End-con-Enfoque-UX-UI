@@ -9,6 +9,7 @@ import { TRANSACTIONS } from "../../data/mockData";
 import { formatCurrency, formatDate } from "../../utils/helpers";
 import { useApp } from "../../context/AppContext";
 import { updateWallet } from "../../store/actions";
+import { eventBus, EVENTS } from "../../utils/eventBus";
 import "./Wallet.css";
 
 const RECHARGE_OPTIONS = [100000, 200000, 500000, 1000000, 2000000, 5000000];
@@ -20,7 +21,11 @@ export default function Wallet() {
 
   const handleRecharge = () => {
     if (!selectedAmount) return;
-    dispatch(updateWallet({ balance: state.wallet.balance + selectedAmount }));
+    const newBalance = state.wallet.balance + selectedAmount;
+    dispatch(updateWallet({ balance: newBalance }));
+    // MFE Finanzas → Shell: notifica el nuevo saldo vía Event Bus
+    // El Shell (Layout) escuchará este evento para actualizar el chip del header
+    eventBus.emit(EVENTS.WALLET_BALANCE_UPDATED, { balance: newBalance });
     setSelectedAmount(null);
     setShowToast(true);
     setTimeout(() => setShowToast(false), 3000);
